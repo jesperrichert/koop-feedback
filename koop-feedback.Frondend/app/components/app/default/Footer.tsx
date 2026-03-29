@@ -9,11 +9,11 @@ export default function Footer() {
             <div
                 className="mt-12 pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between items-center">
                 <p className="text-white/60 text-sm">
-                    © 2025 <a
-                    href="https://xyzjesper.dev"
+                    © 2026 <a
+                    href="https://jespersen.zip"
                     className="text-white/60 hover:text-white transition-colors"
                 >
-                    xyzjesper.dev
+                    jespersen.zip
                 </a>. All rights reserved.
                 </p>
                 <div className="flex items-center space-x-4">
@@ -25,7 +25,7 @@ export default function Footer() {
                     </a>
                     <span className="text-white/60">|</span>
                     <a
-                        href="https://hub.jespersen.zip/pages/imprint-notice"
+                        href={translations?.mainpage.footer.imprintUrl}
                         className="text-white/60 hover:text-white transition-colors"
                     >
                         {translations?.mainpage.footer.imprint}
@@ -33,7 +33,7 @@ export default function Footer() {
                 </div>
                 <div className="space-x-6 mt-4 md:mt-0 inline-flex">
                     <a
-                        href={translations.mainpage.footer.imprintUrl}
+                        href="https://github.com/jesperrichert/koop-feedback"
                         className="text-white/60 hover:text-white transition-colors"
                     >
                         <span className="sr-only inline-flex">GitHub</span>
