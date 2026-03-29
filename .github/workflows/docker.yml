@@ -35,5 +35,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/xyzjesper/koop-feedback:${{ github.run_id }}
-            ghcr.io/xyzjesper/koop-feedback:latest
+            ghcr.io/jesperrichert/koop-feedback:${{ github.run_id }}
+            ghcr.io/jesperrichert/koop-feedback:latest
