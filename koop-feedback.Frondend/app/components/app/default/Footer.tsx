@@ -25,7 +25,7 @@ export default function Footer() {
                     </a>
                     <span className="text-white/60">|</span>
                     <a
-                        href="https://xyzhub.link/pages/imprint-notice"
+                        href="https://hub.jespersen.zip/pages/imprint-notice"
                         className="text-white/60 hover:text-white transition-colors"
                     >
                         {translations?.mainpage.footer.imprint}
