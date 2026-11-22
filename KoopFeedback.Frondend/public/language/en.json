@@ -1,0 +1,166 @@
+{
+  "mainPage": {
+    "title": "Welcome to Koop Feedback",
+    "subtitle": "Create or join a feedback session.",
+    "infoMessage": "Or join with a code",
+    "button": {
+      "createSession": "Create New Session"
+    },
+    "pageError": {
+      "message": "Oops!",
+      "details": "An unexpected error has occurred.",
+      "error": "Error",
+      "back": "Back",
+      "startPage": "Go to the home page",
+      "filler": "or",
+      "text": "Something went wrong.",
+      "notFound": {
+        "text": "Nothing to see here.",
+        "message": "Page not found",
+        "details": "The page you're looking for doesn't exist or has been moved."
+      }
+    },
+    "code": {
+      "label": "Session Code",
+      "placeholder": "Enter session code",
+      "join": "Join"
+    },
+    "footer": {
+      "imprint": "Legal Notice",
+      "imprintUrl": "https://hub.jespersen.zip/pages/imprint-notice",
+      "privacy": "Terms of Service & Privacy Policy",
+      "privacyUrl": "https://hub.jespersen.zip/pages/koop-feedback"
+    },
+    "columns": [
+      {
+        "title": "Went Well",
+        "tone": "mint",
+        "labelClass": "text-[#3C6B52]",
+        "notes": [
+          {
+            "text": "Clear agreements during daily stand-ups",
+            "tilt": -2
+          },
+          {
+            "text": "Fast code reviews",
+            "tilt": 1.5
+          }
+        ]
+      },
+      {
+        "title": "To Improve",
+        "tone": "amber",
+        "labelClass": "text-[#8A6A00]",
+        "notes": [
+          {
+            "text": "Keep meetings more focused",
+            "tilt": 1.5
+          }
+        ]
+      },
+      {
+        "title": "Ideas",
+        "tone": "rose",
+        "labelClass": "text-[#9B3A58]",
+        "notes": [
+          {
+            "text": "Friday demo sessions",
+            "tilt": -1.5
+          },
+          {
+            "text": "Pair programming days",
+            "tilt": 2
+          }
+        ]
+      }
+    ]
+  },
+  "createSession": {
+    "title": "Create New Session",
+    "subtitle": "Enter your name to start a new quiz session",
+    "name": {
+      "label": "Your Name",
+      "placeholder": "Enter your name"
+    },
+    "button": {
+      "create": "Create Session",
+      "creating": "Creating..."
+    }
+  },
+  "session": {
+    "qrCode": {
+      "title": "Join Session",
+      "subtitle": "Scan the QR code to join the session"
+    },
+    "participants": "Participants",
+    "button": {
+      "start": "Start Session"
+    }
+  },
+  "runSession": {
+    "header": {
+      "sessionCode": "Session Code",
+      "loggedInAs": "Logged in as"
+    },
+    "participants": "Participants",
+    "alreadySubmitted": "Feedback Already Submitted",
+    "alreadySubmittedTooltip": "Please wait until the host ends the session.",
+    "feedbackReady": "Feedback Items Ready",
+    "feedback": {
+      "title": "Your Feedback",
+      "placeholder": "No feedback added yet",
+      "type": {
+        "label": "Feedback Type",
+        "placeholder": "Select feedback type",
+        "positive": "Positive",
+        "neutral": "Neutral"
+      },
+      "description": {
+        "label": "Feedback Description",
+        "placeholder": "Describe your feedback..."
+      },
+      "minimumLength": "Minimum"
+    },
+    "button": {
+      "submitFeedback": "Submit Feedback",
+      "endSession": "End Session",
+      "cancel": "Cancel"
+    }
+  },
+  "endSession": {
+    "title": "Feedback",
+    "noFeedback": "No feedback available. Please check again later.",
+    "button": {
+      "logout": "Log Out"
+    }
+  },
+  "toasts": {
+    "session": {
+      "created": "Session created successfully",
+      "joined": "Successfully joined the session",
+      "started": "Session started successfully",
+      "ended": "Session ended successfully",
+      "notFound": "Session not found",
+      "creationFailed": "Failed to create session",
+      "joinFailed": "Failed to join session",
+      "endFailed": "Failed to end session",
+      "loadFailed": "Failed to load session",
+      "invalidCode": "Invalid session code",
+      "codeCopied": "Session code copied to clipboard"
+    },
+    "feedback": {
+      "submitted": "Feedback submitted successfully",
+      "noFeedbackSubmitted": "No feedback submitted",
+      "itemsSubmitted": "Feedback items submitted",
+      "notFound": "Feedback not found",
+      "submissionFailed": "Failed to submit feedback",
+      "added": "Feedback added successfully",
+      "removed": "Feedback removed successfully",
+      "loadFailed": "Failed to load feedback"
+    },
+    "validation": {
+      "nameRequired": "Please enter your name",
+      "descriptionRequired": "Please enter a description"
+    }
+  }
+}

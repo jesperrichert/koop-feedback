@@ -1,23 +1,25 @@
-# koop-feedback.de
+<div align="center">
 
-A simple but powerful tool for capturing user feedback within sessions. Ideal for workshops, meetings, events or digital
-platforms with multiple participants.
-[Visit koop-feedback.de](https://koop-feedback.de)
+# KoopFeedback.de
 
-## Informations
+**A simple but powerful tool for capturing user feedback within sessions.**
 
-- Build with Go and React (Vite)
-- Database, Rest API, Frontend
-- Secure and Open Source
+[![CodeFactor](https://www.codefactor.io/repository/github/xyzjesper/koop-feedback/badge)](https://www.codefactor.io/repository/github/xyzjesper/koop-feedback)
+
+***[@KoopFeedback.de](https://KoopFeedback.de)***
+
+</div>
+
+---
+
+## What is KoopFeedback?
+
+KoopFeedback is a simple but powerful tool for capturing user feedback within sessions. Ideal for workshops, meetings,
+events or digital platforms with multiple participants.
 
 ## Installation
+For Installation see [compose.yaml](compose.yaml)
 
-```yml
-services:
-  feedback:
-    image: ghcr.io/frank-christiansen/koop-feedback:latest
-    ports:
-      - 7474:3000
-    environment:
-      - DATABASE_URL=<database> # Only Postgres
-```
+## Contributing
+
+Feature requests and contributions are always welcome!

@@ -1,27 +1,37 @@
-FROM alpine:3.23.0 AS base
+FROM alpine:3.24.4 AS base
 WORKDIR /app
 
 
-FROM node:lts-alpine3.23 AS buildfrontend
-WORKDIR /koop-feedback.Frondend
+FROM oven/bun:slim AS frontend
+WORKDIR /KoopFeedback.Frondend
 
-COPY /koop-feedback.Frondend/ .
+COPY /KoopFeedback.Frondend/package.json /KoopFeedback.Frondend/package.json
 
-RUN npm install
-RUN npm run build
+RUN bun install
 
-FROM golang:tip-alpine3.23 AS buildbackend
-WORKDIR /koop-feedback.Backend
+COPY /KoopFeedback.Frondend/ /KoopFeedback.Frondend/
 
-COPY /koop-feedback.Backend/ .
+RUN bun run build
 
-RUN go build
+FROM golang:alpine3.24 AS backend
+WORKDIR /KoopFeedback.Backend
+
+COPY /KoopFeedback.Backend/go.mod /KoopFeedback.Backend/go.mod
+COPY /KoopFeedback.Backend/go.sum /KoopFeedback.Backend/go.sum
+
+RUN go mod download
+
+COPY /KoopFeedback.Backend /KoopFeedback.Backend
+
+RUN go build cmd/main.go
 
 FROM base AS final
+WORKDIR /app
 
-ENV FRONTEND_BUILD=/app/frontend
+ENV FRONTEND_BUILD=/app/KoopFeedback.Frondend
+ENV API_URL=""
 
-COPY --from=buildbackend /koop-feedback.Backend/koopfeedback .
-COPY --from=buildfrontend /koop-feedback.Frondend/build/ ./frontend
+COPY --from=backend /KoopFeedback.Backend/main /app/KoopFeedback.Backend/koopfeedback
+COPY --from=frontend /KoopFeedback.Frondend/build/ /app/KoopFeedback.Frondend/
 
-CMD ["./koopfeedback"]
+CMD ["/app/KoopFeedback.Backend/koopfeedback"]

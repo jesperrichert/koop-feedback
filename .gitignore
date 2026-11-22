@@ -1,1 +1,4 @@
-koop-feedback.Backend/.env
+KoopFeedback.Backend/.env
+.env
+docker-compose.dev.yaml
+koop-feedback

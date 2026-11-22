@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Koop Feedback">
+  <rect width="512" height="512" rx="116" fill="#4338CA"/>
+  <path d="M164 120H348A44 44 0 0 1 392 164V296A44 44 0 0 1 348 340H240L170 396V340H164A44 44 0 0 1 120 296V164A44 44 0 0 1 164 120Z" fill="#FFFFFF"/>
+  <g>
+    <rect x="140" y="198" width="64" height="64" rx="14" fill="#BDEBD3" transform="rotate(-5 172 230)"/>
+    <rect x="224" y="198" width="64" height="64" rx="14" fill="#FFE58A" transform="rotate(3 256 230)"/>
+    <rect x="308" y="198" width="64" height="64" rx="14" fill="#FFC2D1" transform="rotate(-3 340 230)"/>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+arg=$1
+
+API_ENDPOINT=http://localhost:3000
+DATABASE_URL=""
+FRONTEND_URL=http://localhost:5173
+
+
+if [[ "$arg" == "backend"  ]]; then
+  export FRONTEND_URL="$FRONTEND_URL" &&
+  export DATABASE_URL="$DATABASE_URL" &&
+  cd KoopFeedback.Backend && go run cmd/main.go
+fi
+
+if [[ "$arg" == "frontend"  ]]; then
+  export VITE_API_ENDPOINT="$API_ENDPOINT" &&
+  cd KoopFeedback.Frondend && bun run dev
+fi
+
+if [[ "$arg" == "database"  ]]; then
+  docker compose -f docker-compose.dev.yaml up postgres
+fi

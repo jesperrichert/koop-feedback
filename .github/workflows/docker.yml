@@ -1,4 +1,4 @@
-name: Builder
+name: Docker Image
 
 on:
   # Allows you to run this workflow manually from the Actions tab
@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - v2
+    tags:
+      - "v*"
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
@@ -16,9 +18,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    strategy:
-      fail-fast: false
-
     steps:
       - uses: actions/checkout@v5
 
@@ -35,5 +34,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/jesperrichert/koop-feedback:${{ github.run_id }}
-            ghcr.io/jesperrichert/koop-feedback:latest
+            ghcr.io/jesperrichert/koop-feedback.de:${{ github.ref_name }}
+            ghcr.io/jesperrichert/koop-feedback.de:latest

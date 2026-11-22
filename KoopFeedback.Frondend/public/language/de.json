@@ -1,0 +1,166 @@
+{
+  "mainPage": {
+    "title": "Willkommen bei Koop Feedback",
+    "subtitle": "Erstelle oder tritt einer Feedback-Session bei.",
+    "infoMessage": "Oder mit Code beitreten",
+    "button": {
+      "createSession": "Neue Session erstellen"
+    },
+    "pageError": {
+      "message": "Ups!",
+      "details": "Ein unerwarteter Fehler ist aufgetreten.",
+      "error": "Fehler",
+      "back": "Zurück",
+      "startPage": "Zur Startseite",
+      "filler": "oder",
+      "text": "Etwas ist schiefgelaufen.",
+      "notFound": {
+        "text": "Hier gibt's nichts zu sehen.",
+        "message": "Seite nicht gefunden",
+        "details": "Die Seite, die du suchst, existiert nicht oder wurde verschoben."
+      }
+    },
+    "code": {
+      "label": "Session-Code",
+      "placeholder": "Session-Code eingeben",
+      "join": "Beitreten"
+    },
+    "footer": {
+      "imprint": "Impressum",
+      "imprintUrl": "https://hub.jespersen.zip/pages/imprint-notice",
+      "privacy": "Nutzungsbedingungen & Datenschutz",
+      "privacyUrl": "https://hub.jespersen.zip/pages/koop-feedback"
+    },
+    "columns": [
+      {
+        "title": "Gut gelaufen",
+        "tone": "mint",
+        "labelClass": "text-[#3C6B52]",
+        "notes": [
+          {
+            "text": "Klare Absprachen im Daily",
+            "tilt": -2
+          },
+          {
+            "text": "Schnelle Code Reviews",
+            "tilt": 1.5
+          }
+        ]
+      },
+      {
+        "title": "Verbessern",
+        "tone": "amber",
+        "labelClass": "text-[#8A6A00]",
+        "notes": [
+          {
+            "text": "Meetings enger takten",
+            "tilt": 1.5
+          }
+        ]
+      },
+      {
+        "title": "Ideen",
+        "tone": "rose",
+        "labelClass": "text-[#9B3A58]",
+        "notes": [
+          {
+            "text": "Freitags Demo Runde",
+            "tilt": -1.5
+          },
+          {
+            "text": "Pairing Tage",
+            "tilt": 2
+          }
+        ]
+      }
+    ]
+  },
+  "createSession": {
+    "title": "Neue Session erstellen",
+    "subtitle": "Gib deinen Namen ein, um eine neue Quiz-Session zu starten",
+    "name": {
+      "label": "Dein Name",
+      "placeholder": "Name eingeben"
+    },
+    "button": {
+      "create": "Session erstellen",
+      "creating": "Wird erstellt..."
+    }
+  },
+  "session": {
+    "qrCode": {
+      "title": "Session beitreten",
+      "subtitle": "QR-Code scannen, um der Session beizutreten"
+    },
+    "participants": "Teilnehmer",
+    "button": {
+      "start": "Session starten"
+    }
+  },
+  "runSession": {
+    "header": {
+      "sessionCode": "Session-Code",
+      "loggedInAs": "Angemeldet als"
+    },
+    "participants": "Teilnehmer",
+    "alreadySubmitted": "Feedback bereits eingereicht",
+    "alreadySubmittedTooltip": "Bitte warte bis der Host die Session beendet.",
+    "feedbackReady": "Feedback-Elemente bereit",
+    "feedback": {
+      "title": "Dein Feedback",
+      "placeholder": "Noch kein Feedback hinzugefügt",
+      "type": {
+        "label": "Feedback-Typ",
+        "placeholder": "Feedback-Typ auswählen",
+        "positive": "Positiv",
+        "neutral": "Neutral"
+      },
+      "description": {
+        "label": "Feedback-Beschreibung",
+        "placeholder": "Beschreibe dein Feedback..."
+      },
+      "minimumLength": "Mindestens"
+    },
+    "button": {
+      "submitFeedback": "Feedback abschicken",
+      "endSession": "Session beenden",
+      "cancel": "Abbrechen"
+    }
+  },
+  "endSession": {
+    "title": "Feedback",
+    "noFeedback": "Kein Feedback verfügbar. Bitte später erneut prüfen.",
+    "button": {
+      "logout": "Abmelden"
+    }
+  },
+  "toasts": {
+    "session": {
+      "created": "Session erfolgreich erstellt",
+      "joined": "Session erfolgreich beigetreten",
+      "started": "Session erfolgreich gestartet",
+      "ended": "Session erfolgreich beendet",
+      "notFound": "Session nicht gefunden",
+      "creationFailed": "Fehler beim Erstellen der Session",
+      "joinFailed": "Fehler beim Beitreten zur Session",
+      "endFailed": "Fehler beim Beenden der Session",
+      "loadFailed": "Fehler beim Laden der Session",
+      "invalidCode": "Ungültiger Session-Code",
+      "codeCopied": "Session-Code in die Zwischenablage kopiert"
+    },
+    "feedback": {
+      "submitted": "Feedback erfolgreich gesendet",
+      "noFeedbackSubmitted": "Kein Feedback gesendet",
+      "itemsSubmitted": "Feedback-Elemente eingereicht",
+      "notFound": "Feedback nicht gefunden",
+      "submissionFailed": "Fehler beim Senden des Feedbacks",
+      "added": "Feedback erfolgreich hinzugefügt",
+      "removed": "Feedback erfolgreich entfernt",
+      "loadFailed": "Fehler beim Laden des Feedbacks"
+    },
+    "validation": {
+      "nameRequired": "Bitte gib deinen Namen ein",
+      "descriptionRequired": "Bitte gib eine Beschreibung ein"
+    }
+  }
+}

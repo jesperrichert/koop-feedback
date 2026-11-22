@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "45443:5432"
+    environment:
+      POSTGRES_DB: koop-feedback
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./storage/postgres:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+  feedback:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: koop-feedback
+    image: ghcr.io/jesperrichert/koop-feedback:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "4444:3000"
+    env_file:
+      - .env
