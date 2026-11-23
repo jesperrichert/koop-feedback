@@ -3,8 +3,8 @@ import {Plus} from "lucide-react";
 import {Button} from "~/components/ui/button";
 import Header from "~/components/app/header";
 import Footer from "~/components/app/footer";
-import {CreateSession} from "~/components/feedback/create/create-session";
-import JoinSession from "~/components/feedback/create/join-session";
+import {Session} from "~/components/custom/state/create/session";
+import Join from "~/components/custom/state/create/join";
 import {BoardPreview} from "~/components/app/board-preview";
 import {TranslationContext} from "~/context/translation";
 
@@ -34,7 +34,7 @@ export default function Page() {
                 </section>
 
                 <section className="mx-auto min-w-0 max-w-md flex-[1_1_380px]">
-                    <CreateSession
+                    <Session
                         isOpen={showCreateSession}
                         onClose={() => setShowCreateSession(false)}
                     />
@@ -57,7 +57,7 @@ export default function Page() {
                                 <span className="h-px flex-1 bg-[#E2E6F2]"/>
                             </div>
 
-                            <JoinSession/>
+                            <Join/>
                         </div>
                     )}
                 </section>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import {ArrowRight} from "lucide-react";
@@ -8,24 +7,20 @@ import {Label} from "~/components/ui/label";
 import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {useTranslation} from "~/context/translation";
-import type {DefaultAPIResponse, POSTCreateSessionResponseData} from "../../../../types/api";
-import JoinInput from "~/components/feedback/create/join-input";
+import CodeInput from "~/components/custom/state/create/code";
 import {API_ENDPOINT} from "~/lib/env";
+import type {DefaultAPIResponse, POSTCreateSessionResponseData} from "../../../../../types/api";
 
-export default function JoinSession() {
+export default function Join() {
     const [code, setCode] = useState<number>();
-    const [showUserNameInput, setShowUserNameInput] = useState(false);
-    const [userName, setUserName] = useState("");
-    const [isJoining, setIsJoining] = useState(false);
-
+    const [showUserNameInput, setShowUserNameInput] = useState<boolean>(false);
+    const [userName, setUserName] = useState<string>();
+    const [isJoining, setIsJoining] = useState<boolean>(false);
     const {translations} = useTranslation();
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const codeParam = params.get("code");
-
+        const codeParam = new URLSearchParams(window.location.search).get("code");
         if (!codeParam || !/^\d+$/.test(codeParam)) return;
-
         const parsedCode = Number(codeParam);
 
         if (!Number.isSafeInteger(parsedCode)) return;
@@ -35,60 +30,48 @@ export default function JoinSession() {
     }, []);
 
     const handleJoin = async () => {
-        if (!userName.trim()) {
-            toast.error(translations?.toasts.validation.nameRequired);
-            return;
-        }
-
-        if (code == null || !Number.isSafeInteger(code)) {
-            toast.error(translations?.toasts.session.invalidCode);
-            return;
-        }
-
+        if (userName && !userName.trim())
+            return toast.error(translations?.toasts.validation.nameRequired);
+        if (code == null || !Number.isSafeInteger(code))
+            return toast.error(translations?.toasts.session.invalidCode);
         if (isJoining) return;
-
         setIsJoining(true);
 
-        try {
-            const req = await fetch(`${API_ENDPOINT}/api/v2/session/join`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    Code: code,
-                    Name: userName.trim()
-                })
-            });
-
-            const res = await req.json() as DefaultAPIResponse<POSTCreateSessionResponseData>;
-
-            if (!req.ok || !res.Success) {
-                toast.error(translations?.toasts.session.joinFailed);
-                return;
+        await fetch(`${API_ENDPOINT}/api/v2/session/join`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                Code: code,
+                Name: userName!.trim()
+            })
+        }).then(async (response) => {
+            return {
+                dto: await response.json(),
+                res: response
             }
+        }).then((obj: {
+            dto: DefaultAPIResponse<POSTCreateSessionResponseData>
+            res: Response
+        }) => {
+            if (!obj.res.ok || !obj.dto.Success)
+                return toast.error(translations?.toasts.session.joinFailed)
 
-            await cookieStore.set({
+            cookieStore.set({
                 name: "authId",
-                value: res.Data.authId
-            });
-
-            toast.success(translations?.toasts.session.joined);
-
-            window.location.assign("/feedback/start");
-        } catch {
-            toast.error(translations?.toasts.session.joinFailed);
-        } finally {
-            setIsJoining(false);
-        }
-    };
+                value: obj.dto.Data.authId
+            }).then(() => {
+                toast.success(translations?.toasts.session.joined);
+                window.location.assign("/state/start");
+            })
+        }).catch(() => toast.error(translations?.toasts.session.joinFailed))
+            .finally(() => setIsJoining(false))
+    }
 
     const handleOpenJoin = () => {
-        if (code == null || !Number.isSafeInteger(code)) {
-            toast.error(translations?.toasts.session.invalidCode);
-            return;
-        }
-
+        if (code == null || !Number.isSafeInteger(code))
+            return toast.error(translations?.toasts.session.invalidCode);
         setShowUserNameInput(true);
     };
 
@@ -138,8 +121,8 @@ export default function JoinSession() {
             </Button>
 
             {showUserNameInput && (
-                <JoinInput
-                    userName={userName}
+                <CodeInput
+                    userName={userName ?? ""}
                     setUserName={setUserName}
                     onClose={() => setShowUserNameInput(false)}
                     handleJoin={handleJoin}

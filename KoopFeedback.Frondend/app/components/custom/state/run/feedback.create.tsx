@@ -3,9 +3,9 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/c
 import {Meh, Smile} from "lucide-react";
 import {Textarea} from "~/components/ui/textarea";
 import {Button} from "~/components/ui/button";
-import type {User} from "../../../../types/user";
+import type {User} from "../../../../../types/user";
 import {useTranslation} from "~/context/translation";
-import {FeedbackType} from "../../../../types/feedback/feedback";
+import {FeedbackType} from "../../../../../types/feedback/feedback";
 
 const MIN_LENGTH = 10;
 

@@ -3,7 +3,7 @@ import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {useTranslation} from "~/context/translation";
 
-export default function JoinInput(
+export default function CodeInput(
     {
         userName,
         setUserName,

@@ -2,7 +2,7 @@ import {index, route, type RouteConfig} from "@react-router/dev/routes";
 
 export default [
     index("routes/page.tsx"),
-    route("feedback/start", "routes/feedback/start/page.tsx"),
-    route("feedback/run", "routes/feedback/run/page.tsx"),
-    route("feedback/end", "routes/feedback/end/page.tsx"),
+    route("state/start", "routes/state/start/page.tsx"),
+    route("state/run", "routes/state/run/page.tsx"),
+    route("state/end", "routes/state/end/page.tsx"),
 ] satisfies RouteConfig;

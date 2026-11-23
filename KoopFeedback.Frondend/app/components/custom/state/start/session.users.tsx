@@ -1,15 +1,14 @@
 import {Card, CardContent, CardHeader, CardTitle} from "~/components/ui/card";
 import {Button} from "~/components/ui/button";
-import type {User} from "../../../../types/user";
+import type {User} from "../../../../../types/user";
 import {Crown, Trash} from "lucide-react";
 import {toast} from "react-toastify";
-import type {GETSessionResponseData} from "../../../../types/api";
+import type {GETSessionResponseData} from "../../../../../types/api";
 import {useTranslation} from "~/context/translation";
+import {API_ENDPOINT} from "~/lib/env";
+import {AVATAR_COLORS} from "~/lib/constants";
 
-// Gleiche Farben wie die Haftnotizen auf der Startseite
-const AVATAR_COLORS = ["bg-[#BDEBD3]", "bg-[#FFE58A]", "bg-[#FFC2D1]"];
-
-export default function Users(
+export default function SessionUsers(
     {
         data,
         authId,
@@ -24,7 +23,7 @@ export default function Users(
 
     const handleRemoveUser = async (user: User) => {
         fetch(
-            `/api/v2/user/${user.ID}`,
+            `${API_ENDPOINT}/api/v2/user/${user.ID}`,
             {
                 method: "DELETE",
                 headers: {
@@ -52,7 +51,8 @@ export default function Users(
 
     return (
         <div className="lg:col-span-2">
-            <Card className="rounded-3xl border border-[#E2E6F2] bg-white shadow-[0_24px_48px_-16px_rgba(67,56,202,0.18)]">
+            <Card
+                className="rounded-3xl border border-[#E2E6F2] bg-white shadow-[0_24px_48px_-16px_rgba(67,56,202,0.18)]">
                 <CardHeader>
                     <div className="flex items-center justify-between gap-4">
                         <CardTitle className="font-display text-xl font-bold tracking-tight text-[#14162B]">

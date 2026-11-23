@@ -1,22 +1,22 @@
 import type {Session} from "./feedback/session";
 import type {User} from "./user";
 
-export interface DefaultAPIResponse<T> {
+export type DefaultAPIResponse<T> = {
     Success: boolean
     Message: string
     Data: T
 }
 
-export interface POSTCreateSessionResponseData {
+export type POSTCreateSessionResponseData = {
     authId: string
 }
 
-export interface POSTSessionFeedbackResponseData {
+export type POSTSessionFeedbackResponseData = {
     Success: number
     Failed: number
 }
 
-export interface GETSessionResponseData {
+export type GETSessionResponseData = {
     Self: User
     Session: Session
     Users: User[]

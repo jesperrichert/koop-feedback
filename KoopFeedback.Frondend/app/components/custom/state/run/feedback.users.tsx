@@ -1,11 +1,10 @@
 import {Check, Crown, X} from "lucide-react";
-import type {GETSessionResponseData} from "../../../../types/api";
-import type {User} from "../../../../types/user";
+import type {GETSessionResponseData} from "../../../../../types/api";
+import type {User} from "../../../../../types/user";
+import {AVATAR_COLORS} from "~/lib/constants";
 
-// Gleiche Farben wie die Haftnotizen auf der Startseite
-const AVATAR_COLORS = ["bg-[#BDEBD3]", "bg-[#FFE58A]", "bg-[#FFC2D1]"];
 
-export default function Users(
+export default function UsersSelect(
     {
         setSelectedUser,
         data
@@ -15,19 +14,17 @@ export default function Users(
     }
 ) {
 
-    // Kopie sortieren, damit data.Users nicht verändert wird
     const sortedUsers = [...data.Users].sort((a: { Name: string; }, b: { Name: string; }) => {
         const nameA = a.Name.toLowerCase();
         const nameB = b.Name.toLowerCase();
         if (nameA < nameB) return -1;
         if (nameA > nameB) return 1;
         return 0;
-    });
+    }).filter(value => value.ID != data.Self.ID)
 
     return <ul className="space-y-3">
         {sortedUsers.map((user, index) => {
-            const isSelf = data?.Self.ID == user.ID;
-            const canSelect = !isSelf && !data?.Self.HasSubmitted;
+            const canSelect = !data?.Self.HasSubmitted;
 
             return (
                 <li key={user.ID}>
@@ -49,7 +46,7 @@ export default function Users(
                         </span>
                         <span className="flex min-w-0 flex-1 items-center gap-2 font-medium text-[#14162B]">
                             <span
-                                className={`truncate ${(isSelf || data?.Self.HasSubmitted) ? "blur-xs" : ""}`}
+                                className={`truncate`}
                             >
                                 {user.Name}
                             </span>

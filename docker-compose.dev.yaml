@@ -4,7 +4,7 @@ services:
     ports:
       - "45443:5432"
     environment:
-      POSTGRES_DB: koop-feedback
+      POSTGRES_DB: koop-state
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
     volumes:
@@ -19,7 +19,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: koop-feedback
+    container_name: koop-state
     image: ghcr.io/jesperrichert/koop-feedback:latest
     depends_on:
       postgres:

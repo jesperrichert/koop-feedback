@@ -10,11 +10,12 @@ import type {User} from "../../../../types/user";
 import {type Feedback, FeedbackType} from "../../../../types/feedback/feedback";
 import NotFound from "~/components/not-found";
 import Loading from "~/components/app/loading";
-import FeedbackSent from "~/components/feedback/run/feedback-sent";
-import {FeedbackCreate} from "~/components/feedback/run/feedback-create";
-import Users from "~/components/feedback/run/users";
-import FeedbackView from "~/components/feedback/run/feedback";
+import FeedbackSent from "~/components/custom/state/run/feedback.sent";
+import {FeedbackCreate} from "~/components/custom/state/run/feedback.create";
+import UserSelectFeedback from "~/components/custom/state/run/feedback.users";
+import FeedbackView from "~/components/custom/state/run/feedback.display";
 import Header from "~/components/app/header";
+import {API_ENDPOINT} from "~/lib/env";
 
 export default function SessionPage() {
     const [data, setData] = useState<GETSessionResponseData | null>(null);
@@ -22,79 +23,68 @@ export default function SessionPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [feedback, setFeedback] = useState<Feedback[]>([]);
-    const [feedbackType, setFeedbackType] = useState<FeedbackType>();
+    const [selectedFeedbackType, setSelectedFeedbackType] = useState<FeedbackType>();
     const [feedbackDescription, setFeedbackDescription] = useState<string>("");
     const {translations} = useTranslation()
 
     useEffect(() => {
-        const fetchSession = async () => {
-            try {
-                const authIdCookie = await cookieStore.get("authId")
-                if (!authIdCookie) {
-                    window.location.href = "/";
-                    return;
+        const session = async () => {
+            const authIdCookie = await cookieStore.get("authId")
+            if (!authIdCookie) return window.location.href = "/";
+            setAuthId(authIdCookie.value as string)
+
+            await fetch(`${API_ENDPOINT}/api/v2/session`, {
+                method: "GET",
+                headers: {
+                    "Authorization": authIdCookie.value as string,
+                    "Content-Type": "application/json",
+                },
+            }).then(async (response) => {
+                return {
+                    dto: await response.json(),
+                    res: response,
                 }
-                setAuthId(authIdCookie.value as string)
-
-                const req = await fetch("/api/v2/session", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": authIdCookie.value as string,
-                        "Content-Type": "application/json",
-                    },
-                });
-                const apiData = await req.json() as DefaultAPIResponse<GETSessionResponseData>
-
-                if (apiData?.Data.Session.IsFinished) return window.open("/feedback/end", "_self")
-
-                setData(apiData.Data)
-            } catch (error) {
+            }).then((obj: {
+                dto: DefaultAPIResponse<GETSessionResponseData>,
+                res: Response,
+            }) => {
+                if (obj.dto?.Data.Session.IsFinished) return window.open("/state/end", "_self")
+                setData(obj.dto.Data)
+            }).catch(_ => {
                 toast.error(translations?.toasts.session.loadFailed);
-                window.open("/", "_self")
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchSession();
-        const interval = setInterval(fetchSession, 5000);
+            }).finally(() => setIsLoading(false))
+        }
+        const interval = setInterval(session, 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [])
 
     const handleAddFeedback = async () => {
         if (!selectedUser) return;
+        if (feedbackDescription.length <= 0)
+            return toast.error(translations?.toasts.validation.descriptionRequired);
 
-        if (feedbackDescription.length <= 0) {
-            toast.error(translations?.toasts.validation.descriptionRequired);
-            return;
-        }
-
-        const newFeedback = {
-            Id: feedback.length + 1,
-            Type: parseInt(String(feedbackType)),
+        const created = {
+            Type: parseInt(String(selectedFeedbackType)),
             Description: feedbackDescription,
             UserId: selectedUser.ID
-        } as Feedback
-
-        setFeedback((prev) => [...prev, newFeedback]);
+        }
+        setFeedback((prev) => [...prev, created]);
         setSelectedUser(null);
-        setFeedbackType(0);
+        setSelectedFeedbackType(0);
         setFeedbackDescription("");
         toast.success(translations?.toasts.feedback.added);
-    };
+    }
 
-    const handleRemoveFeedback = (id: number) => {
-        setFeedback((prev) => prev.filter((feedback) => feedback.Id !== id));
+    const handleRemoveFeedback = (feedback: Feedback) => {
+        setFeedback((prev) => prev.filter((f) => feedback !== f));
         toast.info(translations?.toasts.feedback.removed);
     };
 
     const handleSubmitAllFeedback = async () => {
-        if (feedback.length === 0) {
-            toast.warning(translations?.toasts.feedback.noFeedbackSubmitted);
-            return;
-        }
+        if (feedback.length === 0)
+            return toast.warning(translations?.toasts.feedback.noFeedbackSubmitted);
 
-        const req = await fetch(`/api/v2/session/feedback`, {
+        const req = await fetch(`${API_ENDPOINT}/api/v2/session/feedback`, {
             method: "POST",
             headers: {
                 "Authorization": authId as string,
@@ -104,26 +94,24 @@ export default function SessionPage() {
                 Feedback: feedback
             }),
         });
-        const feedbackRes = await req.json() as DefaultAPIResponse<POSTSessionFeedbackResponseData>
-        if (feedbackRes.Success) {
+        const dto = await req.json() as DefaultAPIResponse<POSTSessionFeedbackResponseData>
+        if (dto.Success) {
             toast.info(
                 `${feedback.length} ${translations?.toasts.feedback.itemsSubmitted}!`
             );
-            if (feedbackRes.Data.Success > 0) toast.success(
-                `${feedbackRes.Data.Success} SUCCESS`
+            if (dto.Data.Success > 0) toast.success(
+                `${dto.Data.Success} SUCCESS`
             );
-            if (feedbackRes.Data.Failed > 0) toast.error(
-                `${feedbackRes.Data.Failed} FAILED`
+            if (dto.Data.Failed > 0) toast.error(
+                `${dto.Data.Failed} FAILED`
             );
 
-        } else toast.error(feedbackRes.Message);
-
-
+        } else toast.error(dto.Message);
         setFeedback([]);
     };
 
     const handleEnd = async () => {
-        const req = await fetch("/api/v2/session/end", {
+        const req = await fetch(`${API_ENDPOINT}/api/v2/session/end`, {
             method: "POST",
             headers: {
                 "Authorization": authId as string,
@@ -158,8 +146,8 @@ export default function SessionPage() {
             </Header>
 
             <FeedbackCreate
-                feedbackType={feedbackType as unknown as string}
-                setFeedbackType={type => setFeedbackType(type as unknown as FeedbackType)}
+                feedbackType={selectedFeedbackType as unknown as string}
+                setFeedbackType={type => setSelectedFeedbackType(type as unknown as FeedbackType)}
                 selectedUser={selectedUser}
                 setSelectedUser={user => setSelectedUser(user)}
                 description={feedbackDescription}
@@ -185,7 +173,7 @@ export default function SessionPage() {
                     </CardHeader>
                     <CardContent>
 
-                        <Users
+                        <UserSelectFeedback
                             setSelectedUser={user => setSelectedUser(user)}
                             data={data}
                         />

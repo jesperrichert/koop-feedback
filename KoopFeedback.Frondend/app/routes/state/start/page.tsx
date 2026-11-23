@@ -4,13 +4,14 @@ import {Copy} from "lucide-react";
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import {useTranslation} from "~/context/translation";
-import type {GETSessionResponseData} from "../../../../types/api";
+import type {DefaultAPIResponse, GETSessionResponseData} from "../../../../types/api";
 import Loading from "~/components/app/loading";
-import NotFound from "~/components/not-found";
-import Users from "~/components/feedback/start/users";
-import QrCode from "~/components/feedback/start/qrcode";
+import SessionUsers from "~/components/custom/state/start/session.users";
+import SessionQrcode from "~/components/custom/state/start/session.qrcode";
 import Header from "~/components/app/header";
 import {auth} from "~/lib/auth";
+import {API_ENDPOINT} from "~/lib/env";
+import NotFound from "~/components/not-found";
 
 export default function SessionPage() {
     const [data, setData] = useState<GETSessionResponseData | null>(null);
@@ -20,28 +21,27 @@ export default function SessionPage() {
 
     useEffect(() => {
         const load = async () => {
-            try {
-                const token = await auth();
-                setAuthId(token ?? "")
-                await fetch("/api/v2/session", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": token ?? "",
-                        "Content-Type": "application/json",
-                    },
-                }).then(value => value.json()).then(value => setData(value))
-                if (data?.Session.IsStarted) return window.open("/feedback/run", "_self")
-            } catch (error) {
-                toast.error(translations?.toasts.session.loadFailed);
-                window.open("/", "_self")
-            } finally {
-                setIsLoading(false);
-            }
+            const token = await auth();
+            setAuthId(token ?? "")
+            await fetch(`${API_ENDPOINT}/api/v2/session`, {
+                method: "GET",
+                headers: {
+                    "Authorization": token ?? "",
+                    "Content-Type": "application/json",
+                },
+            }).then(value => value.json())
+                .then((value: DefaultAPIResponse<GETSessionResponseData>) => setData(value.Data))
+                .catch(() => {
+                    toast.error(translations?.toasts.session.loadFailed)
+                });
+
+            if (data?.Session.IsStarted) return window.open("/state/run", "_self")
+            setIsLoading(false);
         }
 
-        const interval = setInterval(load, 5000);
+        const interval = setInterval(load, 1000);
         return () => clearInterval(interval);
-    }, []);
+    });
 
     const copySessionCode = async () => {
         if (!data) return;
@@ -50,7 +50,7 @@ export default function SessionPage() {
     };
 
     const startSession = async () => {
-        await fetch("/api/v2/session/start", {
+        await fetch(`${API_ENDPOINT}/api/v2/session/start`, {
             method: "POST",
             headers: {
                 "Authorization": authId as string,
@@ -62,6 +62,8 @@ export default function SessionPage() {
                 toast.success(translations?.toasts.session.started);
         })
     }
+
+    console.log(data)
 
     if (isLoading) return <Loading/>
     if (!data) return <NotFound/>
@@ -86,14 +88,14 @@ export default function SessionPage() {
 
             <main className="mx-auto w-full max-w-6xl px-8 pb-16 pt-2">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    <QrCode
+                    <SessionQrcode
                         code={data.Session.Code}
                     />
-                    <Users
+                    <SessionUsers
                         startSession={startSession}
                         authId={authId || ""}
                         data={data}
-                    ></Users>
+                    ></SessionUsers>
                 </div>
             </main>
         </div>

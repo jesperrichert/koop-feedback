@@ -4,7 +4,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "~/compo
 import {useTranslation} from "~/context/translation";
 import QRCode from "react-qr-code";
 
-export default function QrCode({code}: { code: number }) {
+export default function SessionQrcode({code}: { code: number }) {
     const {translations} = useTranslation()
     const link = `${window.location.origin}?code=${code}`
 

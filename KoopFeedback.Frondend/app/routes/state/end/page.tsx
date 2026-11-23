@@ -10,74 +10,62 @@ import {Button} from "~/components/ui/button";
 import {StickyNote} from "~/components/custom/stick-note";
 import Header from "~/components/app/header";
 import type {StickyTone} from "../../../../types/feedback/sticky-note";
+import {TILTS} from "~/lib/constants";
+import {API_ENDPOINT} from "~/lib/env";
 
-// Leichte Schräglage wie bei den Haftnotizen auf der Startseite
-const TILTS = [-2, 1.5, -1, 2, -1.5, 1];
 
-export default function SessionPage() {
+export default function EndPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [feedbacks, setFeedbacks] = useState<Feedback[] | null>([]);
     const {translations} = useTranslation()
 
     useEffect(() => {
-        const fetchSession = async () => {
+        const load = async () => {
+                const authIdCookie = await cookieStore.get("authId")
+                if (!authIdCookie)
+                    return window.location.href = "/";
 
-            const authIdCookie = await cookieStore.get("authId")
-            if (!authIdCookie) {
-                window.location.href = "/";
-                return;
-            }
-            try {
-                const req = await fetch("/api/v2/user/feedback", {
+                await fetch(`${API_ENDPOINT}/api/v2/user/feedback`, {
                     method: "GET",
                     headers: {
                         "Authorization": authIdCookie.value as string,
                         "Content-Type": "application/json",
                     },
-                });
-                if (!req.ok) {
-                    setFeedbacks(null)
-                    setIsLoading(false)
-                    return
-                }
-                const feedback = await req.json() as DefaultAPIResponse<Feedback[]>
+                }).then(async (response) => {
+                    return {
+                        dto: await response.json(),
+                        res: response
+                    }
+                }).then((obj: {
+                    dto: DefaultAPIResponse<Feedback[]>,
+                    res: Response,
+                }) => {
+                    if (!obj.res.ok || !obj.dto.Success) {
+                        setFeedbacks(null)
+                        setIsLoading(false)
+                        return
+                    }
+                    if (obj.dto.Message == "NotActive") return window.open("/state/run", "_self")
 
-                if (!feedback.Success) {
-                    setFeedbacks(null)
-                    setIsLoading(false)
-                    return
-                }
-
-                if (feedback.Message == "NotActive") return window.open("/feedback/run", "_self")
-                if (feedback.Data[0].Description.length < 2) {
-                    setFeedbacks(null)
-                    setIsLoading(false)
-                    return
-                }
-
-                setFeedbacks(feedback.Data);
-                setIsLoading(false);
-            } catch (e) {
-                setFeedbacks(null)
-                setIsLoading(false)
+                    setFeedbacks(obj.dto.Data);
+                }).catch(_ => setFeedbacks(null))
+                    .finally(() => setIsLoading(false))
             }
-        };
-        fetchSession();
-    }, []);
+        ;
+        load();
+    })
 
     if (isLoading) return <Loading/>
 
     const logoutSession = async () => {
         const authIdCookie = await cookieStore.get("authId")
-        await fetch("/api/v2/user/logout", {
+        await fetch(`${API_ENDPOINT}/api/v2/user/logout`, {
             method: "DELETE",
             headers: {
                 "Authorization": authIdCookie?.value as string,
                 "Content-Type": "application/json",
             },
-        });
-
-        window.open("/", "_self")
+        }).then(_ => window.open("/", "_self"))
     }
 
     const all = feedbacks ?? [];
@@ -86,13 +74,13 @@ export default function SessionPage() {
 
     const columns: { title: string; tone: StickyTone; labelClass: string; items: Feedback[] }[] = [
         {
-            title: translations?.mainPage.columns[0].title ?? "Gut gelaufen",
+            title: translations?.mainPage.columns[0].title ?? "Positive",
             tone: "mint",
             labelClass: "text-[#3C6B52]",
             items: positive
         },
         {
-            title: translations?.mainPage.columns[1].title ?? "Verbessern",
+            title: translations?.mainPage.columns[1].title ?? "Neutral",
             tone: "amber",
             labelClass: "text-[#8A6A00]",
             items: improve
@@ -131,7 +119,7 @@ export default function SessionPage() {
                                 </h2>
                                 <ul className="flex flex-col gap-4">
                                     {column.items.map((fb, index) => (
-                                        <li key={`${fb.Id}-${index}`}>
+                                        <li>
                                             <StickyNote
                                                 tone={column.tone}
                                                 tilt={TILTS[index % TILTS.length]}

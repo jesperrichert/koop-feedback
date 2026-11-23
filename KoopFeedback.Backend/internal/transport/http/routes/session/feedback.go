@@ -14,7 +14,6 @@ import (
 )
 
 type APIFeedback struct {
-	Id          int
 	UserId      int
 	Type        feedback.FeedbackType
 	Description string
@@ -67,10 +66,8 @@ func (c *Controller) PostSessionFeedback(ctx *gin.Context) {
 
 		isSameSession := util.DBCheckSameSession(c.DB, strconv.Itoa(userId.(int)), f.UserId)
 		isSelf := util.DBCheckSelf(c.DB, authId.(string), f.UserId)
-		if isSelf {
-			continue
-		}
-		if !isSameSession {
+		if isSelf ||
+			!isSameSession {
 			continue
 		}
 		if f.Type == feedback.Unknown {
