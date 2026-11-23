@@ -1,77 +1,59 @@
 package user
 
 import (
-	"context"
 	"net/http"
 
 	"koopfeedback.de/internal/models"
-	util2 "koopfeedback.de/internal/util"
+	"koopfeedback.de/internal/util"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type GETUser struct {
 	ID int `uri:"id" bindings:"required"`
 }
 
-func (c *Controller) GetUser(ctx *gin.Context) {
-	bCtx := context.Background()
-	body, hasBody := util2.APIBindUri[GETUser](ctx)
+func (c *Controller) Get(ctx *gin.Context) {
+	uri, hasBody := util.APIBindUri[GETUser](ctx)
 
 	if !hasBody {
-		util2.APIErrorResponse[GETUser](ctx, "INVALID_BODY", http.StatusConflict)
+		util.APIErrorResponse[GETUser](ctx, "INVALID_BODY", http.StatusConflict)
 		return
 	}
 
-	user, err := gorm.G[models.User](c.DB).Preload("Session", nil).Where("id = ?", body.ID).First(bCtx)
-
-	if err != nil {
-		util2.APIErrorResponse[GETUser](ctx, err.Error(), http.StatusInternalServerError)
+	user, status := c.UserService.Get(uri.ID)
+	if status != http.StatusOK {
+		util.APIErrorResponse[GETUser](ctx, "USER_NOT_FOUND", status)
 		return
 	}
 
-	ctx.JSON(200, util2.DefaultAPIResponse[models.User]{
+	ctx.JSON(200, util.DefaultAPIResponse[models.User]{
 		Success: true,
-		Message: "User",
-		Data:    user,
+		Message: "USER_FETCHED",
+		Data:    *user,
 	})
-	return
 }
 
-func (c *Controller) DeleteUser(ctx *gin.Context) {
-	bCtx := context.Background()
-	body, hasBody := util2.APIBindUri[GETUser](ctx)
+func (c *Controller) Delete(ctx *gin.Context) {
+	uri, ok := util.APIBindUri[GETUser](ctx)
 
-	if !hasBody {
-		util2.APIErrorResponse[GETUser](ctx, "INVALID_BODY", http.StatusConflict)
+	if !ok {
+		util.APIErrorResponse[GETUser](ctx, "INVALID_BODY", http.StatusConflict)
 		return
 	}
 
 	authId, _ := ctx.Get("authId")
-	userId, _ := ctx.Get("userId")
-	isSelf := util2.DBCheckSelf(c.DB, authId.(string), body.ID)
-	isHost := util2.DBCheckHostWithId(c.DB, userId.(int))
 
-	if isSelf {
-		util2.APISelfError(ctx)
+	status := c.UserService.Delete(authId.(string), uri.ID)
+	if status == http.StatusForbidden {
+		util.APIErrorResponse[GETUser](ctx, "FORBIDDEN", status)
 		return
-	}
-	if !isHost {
-		util2.APIHostError(ctx)
-		return
+	} else if status == http.StatusNotFound {
+		util.APIErrorResponse[GETUser](ctx, "USER_NOT_FOUND", status)
 	}
 
-	user, err := gorm.G[models.User](c.DB).Preload("APIAuth", nil).Where("id = ?", body.ID).First(bCtx)
-	if err != nil {
-		util2.APIErrorResponse[GETUser](ctx, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	c.DB.Delete(&user.APIAuth)
-	c.DB.Delete(&user)
-	ctx.JSON(200, util2.DefaultAPIResponse[any]{
+	ctx.JSON(200, util.DefaultAPIResponse[any]{
 		Success: true,
 		Message: "DELETED",
 	})
-	return
 }

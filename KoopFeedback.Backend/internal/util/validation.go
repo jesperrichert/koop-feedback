@@ -45,7 +45,7 @@ func APIBindUri[T any](ctx *gin.Context) (x *T, y bool) {
 	return bind, true
 }
 
-func DBCheckSelf(db *gorm.DB, authId string, userId int) (x bool) {
+func IsSameUser(db *gorm.DB, authId string, userId int) (x bool) {
 	_, err := gorm.G[models.APIAccess](db).Where("user_id = ? AND token = ?", userId, authId).First(context.Background())
 
 	if err != nil {
@@ -54,7 +54,7 @@ func DBCheckSelf(db *gorm.DB, authId string, userId int) (x bool) {
 	return true
 }
 
-func DBCheckHostWithId(db *gorm.DB, userId int) (x bool) {
+func IsUserHostByUserId(db *gorm.DB, userId int) (x bool) {
 	user, err := gorm.G[models.User](db).Where("id = ?", userId).First(context.Background())
 
 	if err != nil || !user.IsHost {

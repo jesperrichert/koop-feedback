@@ -1,13 +1,18 @@
 package user
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+	"koopfeedback.de/internal/services"
+)
 
 type Controller struct {
-	DB *gorm.DB
+	DB          *gorm.DB
+	UserService *services.UserService
 }
 
-func NewController(db *gorm.DB) *Controller {
+func NewController(db *gorm.DB, service *services.UserService) *Controller {
 	return &Controller{
-		DB: db,
+		DB:          db,
+		UserService: service,
 	}
 }

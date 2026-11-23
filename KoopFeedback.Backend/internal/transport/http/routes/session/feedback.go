@@ -65,7 +65,7 @@ func (c *Controller) PostSessionFeedback(ctx *gin.Context) {
 		f := body.Feedback[i]
 
 		isSameSession := util.DBCheckSameSession(c.DB, strconv.Itoa(userId.(int)), f.UserId)
-		isSelf := util.DBCheckSelf(c.DB, authId.(string), f.UserId)
+		isSelf := util.IsSameUser(c.DB, authId.(string), f.UserId)
 		if isSelf ||
 			!isSameSession {
 			continue

@@ -8,7 +8,7 @@ import Join from "~/components/custom/state/create/join";
 import {BoardPreview} from "~/components/app/board-preview";
 import {TranslationContext} from "~/context/translation";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({}) {
     return [
         {title: "Koop Feedback"},
         {name: "description", content: "Feedback app for Teams"},

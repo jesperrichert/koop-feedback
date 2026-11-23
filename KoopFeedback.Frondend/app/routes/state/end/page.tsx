@@ -53,7 +53,7 @@ export default function EndPage() {
             }
         ;
         load();
-    })
+    }, [])
 
     if (isLoading) return <Loading/>
 

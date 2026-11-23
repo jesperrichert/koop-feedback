@@ -15,7 +15,7 @@ func (c *Controller) StartSession(ctx *gin.Context) {
 	bCtx := context.Background()
 	userId, _ := ctx.Get("userId")
 
-	isHost := util2.DBCheckHostWithId(c.DB, userId.(int))
+	isHost := util2.IsUserHostByUserId(c.DB, userId.(int))
 	if !isHost {
 		util2.APIHostError(ctx)
 		return

@@ -35,8 +35,8 @@ func (rc *Config) Setup() {
 
 		users := api.Group("/user")
 		{
-			users.GET("/:id", userMiddleware.Handle, rc.UserController.GetUser)              // Get User
-			users.DELETE("/:id", userMiddleware.Handle, rc.UserController.DeleteUser)        // Remove User from Session
+			users.GET("/:id", userMiddleware.Handle, rc.UserController.Get)                  // Get User
+			users.DELETE("/:id", userMiddleware.Handle, rc.UserController.Delete)            // Remove User from Session
 			users.GET("/feedback", userMiddleware.Handle, rc.UserController.GetUserFeedback) // Get User Feedback from Session
 			users.DELETE("/logout", userMiddleware.Handle, rc.UserController.Logout)         // Remove User from Session
 		}
