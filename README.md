@@ -4,7 +4,7 @@
 
 **A simple but powerful tool for capturing user feedback within sessions.**
 
-[![CodeFactor](https://www.codefactor.io/repository/github/xyzjesper/koop-feedback/badge)](https://www.codefactor.io/repository/github/xyzjesper/koop-feedback)
+[![CodeFactor](https://www.codefactor.io/repository/github/jesperrichert/koop-feedback/badge)](https://www.codefactor.io/repository/github/jesperrichert/koop-feedback)
 
 ***[@KoopFeedback.de](https://KoopFeedback.de)***
 
