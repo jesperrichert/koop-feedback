@@ -2,13 +2,13 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_DB: koop-state
+      POSTGRES_DB: koop-feedback
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
     volumes:
       - ./storage/postgres:/var/lib/postgresql
   feedback:
-    container_name: koop-state
+    container_name: koop-feedback
     image: ghcr.io/jesperrichert/koop-feedback:latest
     depends_on:
       - postgres
