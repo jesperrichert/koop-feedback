@@ -35,7 +35,7 @@ func (c *CronConfig) Setup() {
 		gocron.NewTask(
 			func() {
 				fmt.Println("Running Job for Database Cleanup....")
-				sessions, err := gorm.G[models.Session](c.DB).Where("is_finished = ?", true).Preload("Users", nil).Find(context.Background())
+				sessions, err := gorm.G[models.SessionModel](c.DB).Where("is_finished = ?", true).Preload("Users", nil).Find(context.Background())
 
 				if err != nil {
 					fmt.Println("Cleanup failed with err " + err.Error())
@@ -48,7 +48,7 @@ func (c *CronConfig) Setup() {
 					for u := range session.Users {
 						user := session.Users[u]
 
-						dbUser, _ := gorm.G[models.User](c.DB).Where("id = ?", user.ID).Preload("APIAuth", nil).Preload("Feedback", nil).First(context.Background())
+						dbUser, _ := gorm.G[models.UserModel](c.DB).Where("id = ?", user.ID).Preload("APIAuth", nil).Preload("Feedback", nil).First(context.Background())
 
 						if len(dbUser.Feedback) > 0 {
 							c.DB.Delete(&dbUser.Feedback)

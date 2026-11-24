@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"koopfeedback.de/internal/transport/http/middleware"
-	"koopfeedback.de/internal/transport/http/routes/session"
-	"koopfeedback.de/internal/transport/http/routes/user"
+	"koopfeedback.de/internal/transport/http/routes/api/session"
+	"koopfeedback.de/internal/transport/http/routes/api/user"
 )
 
 type Config struct {
@@ -25,11 +25,11 @@ func (rc *Config) Setup() {
 
 		session := api.Group("/session")
 		{
-			session.POST("", rc.SessionController.CreateSession)
-			session.GET("", userMiddleware.Handle, rc.SessionController.GetSession)
+			session.POST("", rc.SessionController.Create)
+			session.GET("", userMiddleware.Handle, rc.SessionController.Get)
 			session.POST("/feedback", userMiddleware.Handle, rc.SessionController.PostSessionFeedback) // Add User Feedback for Session
 			session.POST("/join", rc.SessionController.JoinSession)
-			session.POST("/start", userMiddleware.Handle, rc.SessionController.StartSession)
+			session.POST("/start", userMiddleware.Handle, rc.SessionController.Start)
 			session.POST("/end", userMiddleware.Handle, rc.SessionController.EndSession)
 		}
 

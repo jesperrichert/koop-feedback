@@ -11,7 +11,7 @@ import SessionQrcode from "~/components/custom/state/start/session.qrcode";
 import Header from "~/components/app/header";
 import {auth} from "~/lib/auth";
 import {API_ENDPOINT} from "~/lib/env";
-import NotFound from "~/components/not-found";
+import {NotFound} from "~/components/custom/not-found";
 
 export default function SessionPage() {
     const [data, setData] = useState<GETSessionResponseData | null>(null);
@@ -63,7 +63,6 @@ export default function SessionPage() {
         })
     }
 
-    console.log(data)
 
     if (isLoading) return <Loading/>
     if (!data) return <NotFound/>

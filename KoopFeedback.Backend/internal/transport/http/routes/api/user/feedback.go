@@ -3,36 +3,32 @@ package user
 import (
 	"net/http"
 
+	"koopfeedback.de/internal/dto"
 	"koopfeedback.de/internal/util"
 
 	"github.com/gin-gonic/gin"
 )
 
-type GETResponseFeedback struct {
-	Type        int
-	Description string
-}
-
 func (c *Controller) GetUserFeedback(ctx *gin.Context) {
 	userId, _ := ctx.Get("userId")
 	feedback, status := c.UserService.GetFeedback(userId.(int))
 	if status != http.StatusOK {
-		util.APIErrorResponse[GETResponseFeedback](ctx, "ERROR", status)
+		util.APIErrorResponse[dto.FeedbackDto](ctx, "ERROR", status)
 		return
 	}
 
-	var dtos []GETResponseFeedback
+	var dtos []dto.FeedbackDto
 	for i := range feedback {
 		feedbackModel := feedback[i]
-		dtos = append(dtos, GETResponseFeedback{
-			Type:        int(feedbackModel.Type),
+		dtos = append(dtos, dto.FeedbackDto{
+			Type:        feedbackModel.Type,
 			Description: feedbackModel.Description,
 		})
 	}
 
-	ctx.JSON(200, util.DefaultAPIResponse[[]GETResponseFeedback]{
+	ctx.JSON(200, util.DefaultAPIResponse[[]dto.FeedbackDto]{
 		Success: true,
-		Message: "FEEDBACK_FETCHED",
+		Code:    "FEEDBACK_FETCHED",
 		Data:    dtos,
 	})
 }

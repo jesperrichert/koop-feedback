@@ -92,6 +92,11 @@
       "title": "Join Session",
       "subtitle": "Scan the QR code to join the session"
     },
+    "notFound": {
+      "title": "Session not found",
+      "description": "This session doesn't exist or has already ended. Check the code or start a new session.",
+      "back": "Go Back"
+    },
     "participants": "Participants",
     "button": {
       "start": "Start Session"

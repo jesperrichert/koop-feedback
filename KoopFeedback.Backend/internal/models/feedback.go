@@ -7,5 +7,9 @@ type FeedbackModel struct {
 	Type        feedback.FeedbackType
 	Description string
 	UserID      int
-	User        User
+	User        UserModel `gorm:"foreignkey:UserID"`
+}
+
+func (FeedbackModel) TableName() string {
+	return "feedback"
 }

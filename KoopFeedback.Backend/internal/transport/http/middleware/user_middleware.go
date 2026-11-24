@@ -32,7 +32,7 @@ func (m *UserMiddleware) Handle(c *gin.Context) {
 		return
 	}
 
-	user, err := gorm.G[models.APIAccess](m.DB).Where("token = ?", authId).First(ctx)
+	user, err := gorm.G[models.APIAccessModel](m.DB).Where("token = ?", authId).First(ctx)
 	if err != nil {
 		util.APIErrorResponse[any](c, "Unauthorized - No User", http.StatusUnauthorized)
 		c.Abort()

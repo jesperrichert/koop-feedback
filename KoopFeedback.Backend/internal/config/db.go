@@ -25,7 +25,7 @@ func NewDatabase() *gorm.DB {
 	}
 
 	// Migrate the schema
-	dbMigrateErr := db.AutoMigrate(&models.User{}, &models.APIAccess{}, &models.FeedbackModel{}, &models.Session{})
+	dbMigrateErr := db.AutoMigrate(&models.UserModel{}, &models.APIAccessModel{}, &models.FeedbackModel{}, &models.SessionModel{})
 
 	if dbMigrateErr != nil {
 		panic("Failed to migrate the database...")

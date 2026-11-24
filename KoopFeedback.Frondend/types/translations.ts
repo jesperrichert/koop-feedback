@@ -85,7 +85,14 @@ export type Session = {
     qrCode: SessionQrCode;
     participants: string;
     button: SessionButton;
+    notFound: SessionNotFound;
 };
+
+export type SessionNotFound = {
+    title: string;
+    description: string;
+    back: string;
+}
 
 export type RunSessionHeader = {
     sessionCode: string;

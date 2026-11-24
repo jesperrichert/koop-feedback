@@ -20,8 +20,8 @@ func NewUserService(db *gorm.DB) *UserService {
 }
 
 func (s *UserService) GetFeedback(authId int) ([]models.FeedbackModel, int) {
-	apiAccess, err := gorm.G[models.APIAccess](s.DB).Preload("User", nil).Where("token = ?", authId).First(context.Background())
-	user, _ := gorm.G[models.User](s.DB).Preload("Session", nil).Preload("Feedback", nil).Where("id = ?", apiAccess.User.ID).First(context.Background())
+	apiAccess, err := gorm.G[models.APIAccessModel](s.DB).Preload("User", nil).Where("token = ?", authId).First(context.Background())
+	user, _ := gorm.G[models.UserModel](s.DB).Preload("Session", nil).Preload("Feedback", nil).Where("id = ?", apiAccess.User.ID).First(context.Background())
 	if err != nil {
 		return nil, http.StatusInternalServerError
 	}
@@ -55,7 +55,7 @@ func (s *UserService) Delete(authId string, otherUserId int) int {
 		return http.StatusForbidden
 	}
 
-	user, err := gorm.G[models.User](s.DB).Preload("APIAuth", nil).Where("id = ?", otherUserId).First(context.Background())
+	user, err := gorm.G[models.UserModel](s.DB).Preload("APIAuth", nil).Where("id = ?", otherUserId).First(context.Background())
 	if err != nil {
 		return http.StatusNotFound
 	}
@@ -66,8 +66,8 @@ func (s *UserService) Delete(authId string, otherUserId int) int {
 	return http.StatusOK
 }
 
-func (s *UserService) Get(userId int) (*models.User, int) {
-	user, err := gorm.G[models.User](s.DB).Preload("Session", nil).Where("id = ?", userId).First(context.Background())
+func (s *UserService) Get(userId int) (*models.UserModel, int) {
+	user, err := gorm.G[models.UserModel](s.DB).Preload("Session", nil).Where("id = ?", userId).First(context.Background())
 	if err != nil {
 		return nil, http.StatusNotFound
 	}
@@ -75,7 +75,7 @@ func (s *UserService) Get(userId int) (*models.User, int) {
 }
 
 func (s *UserService) Logout(userId int) int {
-	user, err := gorm.G[models.User](s.DB).Preload("Feedback", nil).Where("id = ?", userId).First(context.Background())
+	user, err := gorm.G[models.UserModel](s.DB).Preload("Feedback", nil).Where("id = ?", userId).First(context.Background())
 	if err != nil {
 		return http.StatusInternalServerError
 	}

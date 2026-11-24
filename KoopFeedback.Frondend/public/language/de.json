@@ -88,6 +88,11 @@
     }
   },
   "session": {
+    "notFound": {
+      "title": "Keine Session gefunden",
+      "description": "Diese Sitzung existiert nicht oder ist bereits beendet. Überprüfen Sie den Code oder starten Sie eine neue Sitzung.",
+      "back": "Zurück"
+    },
     "qrCode": {
       "title": "Session beitreten",
       "subtitle": "QR-Code scannen, um der Session beizutreten"

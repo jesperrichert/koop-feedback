@@ -1,13 +1,41 @@
 package util
 
 import (
-	"context"
-
-	"gorm.io/gorm"
-	"koopfeedback.de/internal/models"
+	"github.com/gin-gonic/gin"
 )
 
-func GetUserFromAuthId(db *gorm.DB, authId string) *models.User {
-	result, _ := gorm.G[models.APIAccess](db).Preload("User", nil).Where("token = ?", authId).First(context.Background())
-	return result.User
+type DefaultAPIResponse[T any] struct {
+	Success bool   `json:"success"`
+	Code    string `json:"code"`
+	Data    T      `json:"data"`
+}
+
+func APIErrorResponse[T any](ctx *gin.Context, err string, statusCode int) {
+	ctx.JSON(statusCode,
+		DefaultAPIResponse[T]{
+			Success: false,
+			Code:    err,
+		})
+	return
+}
+
+func APIBindBody[T any](ctx *gin.Context) (x *T, y bool) {
+	var bind *T
+
+	err := ctx.ShouldBindBodyWithJSON(&bind)
+	if err != nil {
+		return bind, false
+	}
+
+	return bind, true
+}
+
+func APIBindUri[T any](ctx *gin.Context) (x *T, y bool) {
+	var bind *T
+
+	err := ctx.ShouldBindUri(&bind)
+	if err != nil {
+		return bind, false
+	}
+	return bind, true
 }

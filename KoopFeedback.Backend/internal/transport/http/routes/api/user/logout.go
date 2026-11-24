@@ -18,6 +18,6 @@ func (c *Controller) Logout(ctx *gin.Context) {
 
 	ctx.JSON(200, util.DefaultAPIResponse[any]{
 		Success: true,
-		Message: "LOGOUT",
+		Code:    "LOGOUT",
 	})
 }

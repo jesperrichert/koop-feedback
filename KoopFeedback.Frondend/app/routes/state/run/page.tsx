@@ -8,7 +8,7 @@ import {Button} from "~/components/ui/button";
 import type {DefaultAPIResponse, GETSessionResponseData, POSTSessionFeedbackResponseData} from "../../../../types/api";
 import type {User} from "../../../../types/user";
 import {type Feedback, FeedbackType} from "../../../../types/feedback/feedback";
-import NotFound from "~/components/not-found";
+import {NotFound} from "~/components/custom/not-found";
 import Loading from "~/components/app/loading";
 import FeedbackSent from "~/components/custom/state/run/feedback.sent";
 import {FeedbackCreate} from "~/components/custom/state/run/feedback.create";
@@ -125,7 +125,7 @@ export default function SessionPage() {
     }
 
     if (isLoading) return <Loading></Loading>
-    if (!data) return <NotFound></NotFound>
+    if (!data) return <NotFound/>
     if (data?.Self.HasSubmitted && !data.Self.IsHost) return <FeedbackSent/>
 
     return (
