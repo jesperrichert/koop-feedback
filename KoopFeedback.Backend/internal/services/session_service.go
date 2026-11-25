@@ -190,13 +190,14 @@ func (s *SessionService) AddFeedback(userId uint, feedbackDto []dto.FeedbackDto)
 	return successFeedback, http.StatusOK
 }
 
-func (s *SessionService) Delete(userId int) int {
-	isHost := util.IsUseerHostByAuth(s.DB, strconv.Itoa(userId))
+func (s *SessionService) Delete(authId string) int {
+	isHost := util.IsUserHostByAuth(s.DB, authId)
 	if !isHost {
 		return http.StatusForbidden
 	}
 
-	user, err := gorm.G[models.UserModel](s.DB).Preload("Session", nil).Where("id = ?", userId).First(context.Background())
+	apiAccess, err := gorm.G[models.APIAccessModel](s.DB).Preload("User", nil).Where("token = ?", authId).First(context.Background())
+	user, err := gorm.G[models.UserModel](s.DB).Preload("Session", nil).Where("id = ?", apiAccess.UserID).First(context.Background())
 	if err != nil {
 		return http.StatusInternalServerError
 	}

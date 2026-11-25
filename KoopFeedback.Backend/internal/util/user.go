@@ -25,10 +25,10 @@ func IsUserHostByUserId(db *gorm.DB, userId uint) (x bool) {
 	}
 	return true
 }
-func IsUseerHostByAuth(db *gorm.DB, authId string) (x bool) {
-	user, err := gorm.G[models.UserModel](db).Where("id = ?", authId).First(context.Background())
+func IsUserHostByAuth(db *gorm.DB, authId string) (x bool) {
+	apiAccess, err := gorm.G[models.APIAccessModel](db).Preload("User", nil).Where("token = ?", authId).First(context.Background())
 
-	if err != nil || !user.IsHost {
+	if err != nil || !apiAccess.User.IsHost {
 		return false
 	}
 	return true

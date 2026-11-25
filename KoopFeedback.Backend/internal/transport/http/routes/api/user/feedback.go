@@ -10,8 +10,8 @@ import (
 )
 
 func (c *Controller) GetUserFeedback(ctx *gin.Context) {
-	userId, _ := ctx.Get("userId")
-	feedback, status := c.UserService.GetFeedback(userId.(int))
+	authId, _ := ctx.Get("authId")
+	feedback, status := c.UserService.GetFeedback(authId.(string))
 	if status != http.StatusOK {
 		util.APIErrorResponse[dto.FeedbackDto](ctx, "ERROR", status)
 		return

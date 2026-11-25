@@ -19,7 +19,7 @@ func NewUserService(db *gorm.DB) *UserService {
 	}
 }
 
-func (s *UserService) GetFeedback(authId int) ([]models.FeedbackModel, int) {
+func (s *UserService) GetFeedback(authId string) ([]models.FeedbackModel, int) {
 	apiAccess, err := gorm.G[models.APIAccessModel](s.DB).Preload("User", nil).Where("token = ?", authId).First(context.Background())
 	user, _ := gorm.G[models.UserModel](s.DB).Preload("Session", nil).Preload("Feedback", nil).Where("id = ?", apiAccess.User.ID).First(context.Background())
 	if err != nil {

@@ -1,7 +1,7 @@
-export interface FeedbackDto {
-    user_id: number
-    type: FeedbackType
-    description: string
+export type FeedbackDto = {
+    user_id: number;
+    type: FeedbackType;
+    description: string;
 }
 
 export enum FeedbackType {

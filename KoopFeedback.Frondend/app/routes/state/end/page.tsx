@@ -40,14 +40,14 @@ export default function EndPage() {
                     dto: DefaultAPIResponse<FeedbackDto[]>,
                     res: Response,
                 }) => {
-                    if (!obj.res.ok || !obj.dto.Success) {
+                    if (!obj.res.ok || !obj.dto.success) {
                         setFeedbacks(null)
                         setIsLoading(false)
                         return
                     }
-                    if (obj.dto.Message == "NotActive") return window.open("/state/run", "_self")
+                    if (obj.res.status  == 423) return window.open("/state/run", "_self")
 
-                    setFeedbacks(obj.dto.Data);
+                    setFeedbacks(obj.dto.data);
                 }).catch(_ => setFeedbacks(null))
                     .finally(() => setIsLoading(false))
             }

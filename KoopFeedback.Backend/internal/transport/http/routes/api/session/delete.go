@@ -9,9 +9,9 @@ import (
 )
 
 func (c *Controller) EndSession(ctx *gin.Context) {
-	userId, _ := ctx.Get("userId")
+	authId, _ := ctx.Get("authId")
 
-	status := c.SessionService.Delete(userId.(int))
+	status := c.SessionService.Delete(authId.(string))
 	if status != http.StatusOK {
 		util.APIErrorResponse[any](ctx, "END_FAILED", status)
 		return

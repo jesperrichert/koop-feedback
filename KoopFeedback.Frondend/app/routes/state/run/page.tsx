@@ -97,7 +97,7 @@ export default function SessionPage() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                feedback: feedback
+                feedback: feedback.map(f => ({...f, user_id: Number(f.user_id)}))
             } satisfies AddFeedbackRequest),
         });
         const dto = await req.json() as DefaultAPIResponse<GetSessionFeedbackResponse>
