@@ -1,9 +1,9 @@
 import {Card, CardContent, CardHeader, CardTitle} from "~/components/ui/card";
 import {Button} from "~/components/ui/button";
-import type {User} from "../../../../../types/user";
+import type {UserDto} from "../../../../../types/userDto";
 import {Crown, Trash} from "lucide-react";
 import {toast} from "react-toastify";
-import type {GETSessionResponseData} from "../../../../../types/api";
+import type {GetSessionResponse} from "../../../../../types/api";
 import {useTranslation} from "~/context/translation";
 import {API_ENDPOINT} from "~/lib/env";
 import {AVATAR_COLORS} from "~/lib/constants";
@@ -14,16 +14,16 @@ export default function SessionUsers(
         authId,
         startSession
     }: {
-        data: GETSessionResponseData,
+        data: GetSessionResponse,
         authId: string,
         startSession: () => void
     }
 ) {
     const {translations} = useTranslation()
 
-    const handleRemoveUser = async (user: User) => {
+    const handleRemoveUser = async (user: UserDto) => {
         fetch(
-            `${API_ENDPOINT}/api/v2/user/${user.ID}`,
+            `${API_ENDPOINT}/api/v2/user/${user.id}`,
             {
                 method: "DELETE",
                 headers: {
@@ -56,10 +56,10 @@ export default function SessionUsers(
                 <CardHeader>
                     <div className="flex items-center justify-between gap-4">
                         <CardTitle className="font-display text-xl font-bold tracking-tight text-[#14162B]">
-                            {translations?.session.participants} ({data.Users.length})
+                            {translations?.session.participants} ({data.users.length})
                         </CardTitle>
                         {
-                            (!data.Session.IsStarted && data.Self.IsHost) && (
+                            (!data.session.is_started && data.self.is_host) && (
                                 <Button
                                     variant="default"
                                     className="h-11 cursor-pointer rounded-xl bg-indigo-700 px-5 font-semibold text-white hover:bg-indigo-800"
@@ -73,30 +73,30 @@ export default function SessionUsers(
                 </CardHeader>
                 <CardContent>
                     <ul className="space-y-3">
-                        {data.Users.map((user: User, index: number) => (
+                        {data.users.map((user: UserDto, index: number) => (
                             <li
-                                key={user.ID}
+                                key={user.id}
                                 className="flex items-center gap-4 rounded-2xl bg-[#F4F6FB] p-3"
                             >
                                 <div
                                     aria-hidden="true"
                                     className={`${AVATAR_COLORS[index % AVATAR_COLORS.length]} flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-[#14162B]`}
                                 >
-                                    {user.Name.charAt(0).toUpperCase()}
+                                    {user.name.charAt(0).toUpperCase()}
                                 </div>
                                 <span className="min-w-0 flex-1 truncate font-medium text-[#14162B]">
-                                    {user.Name}
+                                    {user.name}
                                 </span>
-                                {user.IsHost ? (
+                                {user.is_host ? (
                                     <span className="flex h-11 w-11 items-center justify-center">
                                         <Crown className="h-5 w-5 text-amber-600" aria-hidden="true"/>
                                         <span className="sr-only">Host</span>
                                     </span>
                                 ) : (
-                                    data.Self.IsHost && (
+                                    data.self.is_host && (
                                         <button
                                             type="button"
-                                            aria-label={`Remove ${user.Name}`}
+                                            aria-label={`Remove ${user.name}`}
                                             onClick={() => handleRemoveUser(user)}
                                             className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-[#5B6078] transition-colors hover:bg-red-50 hover:text-red-700"
                                         >

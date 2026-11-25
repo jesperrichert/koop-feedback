@@ -47,6 +47,7 @@ func (c *Controller) Delete(ctx *gin.Context) {
 		return
 	} else if status == http.StatusNotFound {
 		util.APIErrorResponse[dto.GetUserRequest](ctx, "USER_NOT_FOUND", status)
+		return
 	}
 
 	ctx.JSON(200, util.DefaultAPIResponse[any]{

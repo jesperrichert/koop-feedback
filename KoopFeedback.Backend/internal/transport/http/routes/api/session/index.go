@@ -41,7 +41,7 @@ func (c *Controller) Create(ctx *gin.Context) {
 func (c *Controller) Get(ctx *gin.Context) {
 	userId, _ := ctx.Get("userId")
 
-	userModels, session, status := c.SessionService.Get(userId.(int))
+	userModels, session, status := c.SessionService.Get(userId.(uint))
 	if status != http.StatusOK {
 		util.APIErrorResponse[any](ctx, "FAILED_FETCH_SESSION", status)
 	}
@@ -61,7 +61,7 @@ func (c *Controller) Get(ctx *gin.Context) {
 
 	ctx.JSON(200, util.DefaultAPIResponse[dto.GetSessionResponse]{
 		Success: true,
-		Code:    "SESSION - USERS",
+		Code:    "SESSION",
 		Data: dto.GetSessionResponse{
 			Self:    user,
 			Session: session.ToDto(),

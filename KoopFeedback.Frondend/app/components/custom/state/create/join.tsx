@@ -9,7 +9,7 @@ import {Button} from "~/components/ui/button";
 import {useTranslation} from "~/context/translation";
 import CodeInput from "~/components/custom/state/create/code";
 import {API_ENDPOINT} from "~/lib/env";
-import type {DefaultAPIResponse, POSTCreateSessionResponseData} from "../../../../../types/api";
+import type {CreateSessionResponse, DefaultAPIResponse} from "../../../../../types/api";
 
 export default function Join() {
     const [code, setCode] = useState<number>();
@@ -52,15 +52,15 @@ export default function Join() {
                 res: response
             }
         }).then((obj: {
-            dto: DefaultAPIResponse<POSTCreateSessionResponseData>
+            dto: DefaultAPIResponse<CreateSessionResponse>
             res: Response
         }) => {
-            if (!obj.res.ok || !obj.dto.Success)
+            if (!obj.res.ok || !obj.dto.success)
                 return toast.error(translations?.toasts.session.joinFailed)
 
             cookieStore.set({
                 name: "authId",
-                value: obj.dto.Data.authId
+                value: obj.dto.data.authId
             }).then(() => {
                 toast.success(translations?.toasts.session.joined);
                 window.location.assign("/state/start");

@@ -1,6 +1,6 @@
 import {Check, Crown, X} from "lucide-react";
-import type {GETSessionResponseData} from "../../../../../types/api";
-import type {User} from "../../../../../types/user";
+import type {GetSessionResponse} from "../../../../../types/api";
+import type {UserDto} from "../../../../../types/userDto";
 import {AVATAR_COLORS} from "~/lib/constants";
 
 
@@ -9,25 +9,25 @@ export default function UsersSelect(
         setSelectedUser,
         data
     }: {
-        data: GETSessionResponseData
-        setSelectedUser: (user: User) => void
+        data: GetSessionResponse
+        setSelectedUser: (user: UserDto) => void
     }
 ) {
 
-    const sortedUsers = [...data.Users].sort((a: { Name: string; }, b: { Name: string; }) => {
-        const nameA = a.Name.toLowerCase();
-        const nameB = b.Name.toLowerCase();
+    const sortedUsers = [...data.users].sort((a: { name: string; }, b: { name: string; }) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
         if (nameA < nameB) return -1;
         if (nameA > nameB) return 1;
         return 0;
-    }).filter(value => value.ID != data.Self.ID)
+    }).filter(value => value.id != data.self.id)
 
     return <ul className="space-y-3">
         {sortedUsers.map((user, index) => {
-            const canSelect = !data?.Self.HasSubmitted;
+            const canSelect = !data?.self.has_submitted;
 
             return (
-                <li key={user.ID}>
+                <li key={user.id}>
                     <button
                         type="button"
                         disabled={!canSelect}
@@ -42,23 +42,23 @@ export default function UsersSelect(
                             aria-hidden="true"
                             className={`${AVATAR_COLORS[index % AVATAR_COLORS.length]} flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-[#14162B]`}
                         >
-                            {user.Name.charAt(0).toUpperCase()}
+                            {user.name.charAt(0).toUpperCase()}
                         </span>
                         <span className="flex min-w-0 flex-1 items-center gap-2 font-medium text-[#14162B]">
                             <span
                                 className={`truncate`}
                             >
-                                {user.Name}
+                                {user.name}
                             </span>
-                            {user.IsHost && (
+                            {user.is_host && (
                                 <>
                                     <Crown className="h-4 w-4 shrink-0 text-amber-600" aria-hidden="true"/>
                                     <span className="sr-only">Host</span>
                                 </>
                             )}
                         </span>
-                        {data.Self.IsHost && (
-                            user.HasSubmitted ? (
+                        {data.self.is_host && (
+                            user.has_submitted ? (
                                 <span className="flex shrink-0 items-center">
                                     <Check className="h-5 w-5 text-emerald-700" aria-hidden="true"/>
                                     <span className="sr-only">Submitted</span>

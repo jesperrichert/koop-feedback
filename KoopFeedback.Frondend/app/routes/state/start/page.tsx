@@ -4,7 +4,7 @@ import {Copy} from "lucide-react";
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import {useTranslation} from "~/context/translation";
-import type {DefaultAPIResponse, GETSessionResponseData} from "../../../../types/api";
+import type {DefaultAPIResponse, GetSessionResponse} from "../../../../types/api";
 import Loading from "~/components/app/loading";
 import SessionUsers from "~/components/custom/state/start/session.users";
 import SessionQrcode from "~/components/custom/state/start/session.qrcode";
@@ -14,7 +14,7 @@ import {API_ENDPOINT} from "~/lib/env";
 import {NotFound} from "~/components/custom/not-found";
 
 export default function SessionPage() {
-    const [data, setData] = useState<GETSessionResponseData | null>(null);
+    const [data, setData] = useState<GetSessionResponse | null>(null);
     const [authId, setAuthId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const {translations} = useTranslation()
@@ -30,12 +30,12 @@ export default function SessionPage() {
                     "Content-Type": "application/json",
                 },
             }).then(value => value.json())
-                .then((value: DefaultAPIResponse<GETSessionResponseData>) => setData(value.Data))
+                .then((value: DefaultAPIResponse<GetSessionResponse>) => setData(value.data))
                 .catch(() => {
                     toast.error(translations?.toasts.session.loadFailed)
                 });
 
-            if (data?.Session.IsStarted) return window.open("/state/run", "_self")
+            if (data?.session.is_started) return window.open("/state/run", "_self")
             setIsLoading(false);
         }
 
@@ -45,7 +45,7 @@ export default function SessionPage() {
 
     const copySessionCode = async () => {
         if (!data) return;
-        await navigator.clipboard.writeText(data.Session.Code.toString());
+        await navigator.clipboard.writeText(data.session.code.toString());
         toast.success(translations?.toasts.session.codeCopied);
     };
 
@@ -78,7 +78,7 @@ export default function SessionPage() {
                     <span>
                         Code{" "}
                         <span className="font-display text-base font-bold tracking-widest text-[#14162B]">
-                            {data.Session.Code}
+                            {data.session.code}
                         </span>
                     </span>
                     <Copy className="h-4 w-4" aria-hidden="true"/>
@@ -88,7 +88,7 @@ export default function SessionPage() {
             <main className="mx-auto w-full max-w-6xl px-8 pb-16 pt-2">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     <SessionQrcode
-                        code={data.Session.Code}
+                        code={data.session.code}
                     />
                     <SessionUsers
                         startSession={startSession}

@@ -55,7 +55,7 @@ func (s *UserService) Delete(authId string, otherUserId uint) int {
 		return http.StatusForbidden
 	}
 
-	user, err := gorm.G[models.UserModel](s.DB).Preload("APIAuth", nil).Where("id = ?", otherUserId).First(context.Background())
+	user, err := gorm.G[models.UserModel](s.DB).Preload("APIAccess", nil).Where("id = ?", otherUserId).First(context.Background())
 	if err != nil {
 		return http.StatusNotFound
 	}

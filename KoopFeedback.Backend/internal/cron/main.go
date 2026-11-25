@@ -48,7 +48,7 @@ func (c *CronConfig) Setup() {
 					for u := range session.Users {
 						user := session.Users[u]
 
-						dbUser, _ := gorm.G[models.UserModel](c.DB).Where("id = ?", user.ID).Preload("APIAuth", nil).Preload("Feedback", nil).First(context.Background())
+						dbUser, _ := gorm.G[models.UserModel](c.DB).Where("id = ?", user.ID).Preload("APIAccess", nil).Preload("Feedback", nil).First(context.Background())
 
 						if len(dbUser.Feedback) > 0 {
 							c.DB.Delete(&dbUser.Feedback)

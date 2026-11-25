@@ -3,7 +3,7 @@
 import {useEffect, useState} from "react";
 import {LogOut} from "lucide-react";
 import {useTranslation} from "~/context/translation";
-import {type Feedback, FeedbackType} from "../../../../types/feedback/feedback";
+import {type FeedbackDto, FeedbackType} from "../../../../types/feedback/feedbackDto";
 import Loading from "~/components/app/loading";
 import type {DefaultAPIResponse} from "../../../../types/api";
 import {Button} from "~/components/ui/button";
@@ -16,7 +16,7 @@ import {API_ENDPOINT} from "~/lib/env";
 
 export default function EndPage() {
     const [isLoading, setIsLoading] = useState(true);
-    const [feedbacks, setFeedbacks] = useState<Feedback[] | null>([]);
+    const [feedbacks, setFeedbacks] = useState<FeedbackDto[] | null>([]);
     const {translations} = useTranslation()
 
     useEffect(() => {
@@ -37,7 +37,7 @@ export default function EndPage() {
                         res: response
                     }
                 }).then((obj: {
-                    dto: DefaultAPIResponse<Feedback[]>,
+                    dto: DefaultAPIResponse<FeedbackDto[]>,
                     res: Response,
                 }) => {
                     if (!obj.res.ok || !obj.dto.Success) {
@@ -69,10 +69,10 @@ export default function EndPage() {
     }
 
     const all = feedbacks ?? [];
-    const positive = all.filter(fb => fb.Type == FeedbackType.Positive);
-    const improve = all.filter(fb => fb.Type != FeedbackType.Positive);
+    const positive = all.filter(fb => fb.type == FeedbackType.Positive);
+    const improve = all.filter(fb => fb.type != FeedbackType.Positive);
 
-    const columns: { title: string; tone: StickyTone; labelClass: string; items: Feedback[] }[] = [
+    const columns: { title: string; tone: StickyTone; labelClass: string; items: FeedbackDto[] }[] = [
         {
             title: translations?.mainPage.columns[0].title ?? "Positive",
             tone: "mint",
@@ -125,7 +125,7 @@ export default function EndPage() {
                                                 tilt={TILTS[index % TILTS.length]}
                                             >
                                                 <span className="whitespace-pre-wrap break-words">
-                                                    {fb.Description}
+                                                    {fb.description}
                                                 </span>
                                             </StickyNote>
                                         </li>

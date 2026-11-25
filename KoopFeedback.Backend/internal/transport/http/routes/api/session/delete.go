@@ -14,6 +14,7 @@ func (c *Controller) EndSession(ctx *gin.Context) {
 	status := c.SessionService.Delete(userId.(int))
 	if status != http.StatusOK {
 		util.APIErrorResponse[any](ctx, "END_FAILED", status)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, util.DefaultAPIResponse[any]{

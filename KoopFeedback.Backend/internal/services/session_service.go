@@ -59,7 +59,7 @@ func (s *SessionService) Create(hostName string) (string, int) {
 	return authId, http.StatusCreated
 }
 
-func (s *SessionService) Get(userId int) ([]models.UserModel, *models.SessionModel, int) {
+func (s *SessionService) Get(userId uint) ([]models.UserModel, *models.SessionModel, int) {
 	user, err := gorm.G[models.UserModel](s.DB).Where("id = ?", userId).First(context.Background())
 	if err != nil {
 		return nil, nil, http.StatusNotFound
@@ -99,7 +99,7 @@ func (s *SessionService) Join(code int, name string) (string, int) {
 		return "", http.StatusInternalServerError
 	}
 
-	return authId, http.StatusCreated
+	return authId, http.StatusOK
 }
 
 func (s *SessionService) Start(userId uint) int {
@@ -135,8 +135,8 @@ func (s *SessionService) Start(userId uint) int {
 	return http.StatusOK
 }
 
-func (s *SessionService) AddFeedback(userId int, feedbackDto []dto.FeedbackDto) (int, int) {
-	authUser, err := gorm.G[models.UserModel](s.DB).Preload("APIAuth", nil).Preload("Session", nil).Where("id = ?", userId).First(context.Background())
+func (s *SessionService) AddFeedback(userId uint, feedbackDto []dto.FeedbackDto) (int, int) {
+	authUser, err := gorm.G[models.UserModel](s.DB).Preload("APIAccess", nil).Preload("Session", nil).Where("id = ?", userId).First(context.Background())
 
 	if !authUser.Session.IsStarted ||
 		authUser.Session.IsFinished {
@@ -155,7 +155,7 @@ func (s *SessionService) AddFeedback(userId int, feedbackDto []dto.FeedbackDto) 
 	for i := range feedbackDto {
 		f := feedbackDto[i]
 
-		isSameSession := util.HasUserSameSession(s.DB, strconv.Itoa(userId), f.UserId)
+		isSameSession := util.HasUserSameSession(s.DB, userId, f.UserId)
 		isSelf := util.IsSameUser(s.DB, authUser.APIAccess.Token, f.UserId)
 		if isSelf ||
 			!isSameSession {

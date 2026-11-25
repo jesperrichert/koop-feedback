@@ -5,9 +5,14 @@ import {toast} from "react-toastify";
 import {useTranslation} from "~/context/translation";
 import {Card, CardContent, CardHeader, CardTitle} from "~/components/ui/card";
 import {Button} from "~/components/ui/button";
-import type {DefaultAPIResponse, GETSessionResponseData, POSTSessionFeedbackResponseData} from "../../../../types/api";
-import type {User} from "../../../../types/user";
-import {type Feedback, FeedbackType} from "../../../../types/feedback/feedback";
+import type {
+    AddFeedbackRequest,
+    DefaultAPIResponse,
+    GetSessionFeedbackResponse,
+    GetSessionResponse
+} from "../../../../types/api";
+import type {UserDto} from "../../../../types/userDto";
+import {type FeedbackDto, FeedbackType} from "../../../../types/feedback/feedbackDto";
 import {NotFound} from "~/components/custom/not-found";
 import Loading from "~/components/app/loading";
 import FeedbackSent from "~/components/custom/state/run/feedback.sent";
@@ -18,12 +23,12 @@ import Header from "~/components/app/header";
 import {API_ENDPOINT} from "~/lib/env";
 
 export default function SessionPage() {
-    const [data, setData] = useState<GETSessionResponseData | null>(null);
+    const [data, setData] = useState<GetSessionResponse | null>(null);
     const [authId, setAuthId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
-    const [feedback, setFeedback] = useState<Feedback[]>([]);
-    const [selectedFeedbackType, setSelectedFeedbackType] = useState<FeedbackType>();
+    const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
+    const [feedback, setFeedback] = useState<FeedbackDto[]>([]);
+    const [selectedFeedbackType, setSelectedFeedbackType] = useState<FeedbackType | null>();
     const [feedbackDescription, setFeedbackDescription] = useState<string>("");
     const {translations} = useTranslation()
 
@@ -45,11 +50,11 @@ export default function SessionPage() {
                     res: response,
                 }
             }).then((obj: {
-                dto: DefaultAPIResponse<GETSessionResponseData>,
+                dto: DefaultAPIResponse<GetSessionResponse>,
                 res: Response,
             }) => {
-                if (obj.dto?.Data.Session.IsFinished) return window.open("/state/end", "_self")
-                setData(obj.dto.Data)
+                if (obj.dto?.data.session.is_finished) return window.open("/state/end", "_self")
+                setData(obj.dto.data)
             }).catch(_ => {
                 toast.error(translations?.toasts.session.loadFailed);
             }).finally(() => setIsLoading(false))
@@ -64,18 +69,19 @@ export default function SessionPage() {
             return toast.error(translations?.toasts.validation.descriptionRequired);
 
         const created = {
-            Type: parseInt(String(selectedFeedbackType)),
-            Description: feedbackDescription,
-            UserId: selectedUser.ID
-        }
+            type: parseInt(String(selectedFeedbackType)),
+            description: feedbackDescription,
+            user_id: selectedUser.id
+        } satisfies FeedbackDto
+
         setFeedback((prev) => [...prev, created]);
         setSelectedUser(null);
-        setSelectedFeedbackType(0);
+        setSelectedFeedbackType(null);
         setFeedbackDescription("");
         toast.success(translations?.toasts.feedback.added);
     }
 
-    const handleRemoveFeedback = (feedback: Feedback) => {
+    const handleRemoveFeedback = (feedback: FeedbackDto) => {
         setFeedback((prev) => prev.filter((f) => feedback !== f));
         toast.info(translations?.toasts.feedback.removed);
     };
@@ -91,22 +97,22 @@ export default function SessionPage() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                Feedback: feedback
-            }),
+                feedback: feedback
+            } satisfies AddFeedbackRequest),
         });
-        const dto = await req.json() as DefaultAPIResponse<POSTSessionFeedbackResponseData>
-        if (dto.Success) {
+        const dto = await req.json() as DefaultAPIResponse<GetSessionFeedbackResponse>
+        if (dto.success) {
             toast.info(
                 `${feedback.length} ${translations?.toasts.feedback.itemsSubmitted}!`
             );
-            if (dto.Data.Success > 0) toast.success(
-                `${dto.Data.Success} SUCCESS`
+            if (dto.data.success > 0) toast.success(
+                `${dto.data.success} SUCCESS`
             );
-            if (dto.Data.Failed > 0) toast.error(
-                `${dto.Data.Failed} FAILED`
+            if (dto.data.failed > 0) toast.error(
+                `${dto.data.failed} FAILED`
             );
 
-        } else toast.error(dto.Message);
+        } else toast.error(dto.code);
         setFeedback([]);
     };
 
@@ -126,7 +132,7 @@ export default function SessionPage() {
 
     if (isLoading) return <Loading></Loading>
     if (!data) return <NotFound/>
-    if (data?.Self.HasSubmitted && !data.Self.IsHost) return <FeedbackSent/>
+    if (data?.self.has_submitted && !data.self.is_host) return <FeedbackSent/>
 
     return (
         <div className="min-h-screen bg-[#F4F6FB] text-[#14162B]">
@@ -140,13 +146,13 @@ export default function SessionPage() {
                     <span
                         className="inline-flex min-h-9 items-center rounded-full border border-[#E2E6F2] bg-white px-4">
                         {translations?.runSession.header.loggedInAs}:{" "}
-                        <span className="ml-1 font-semibold text-[#14162B]">{data.Self?.Name}</span>
+                        <span className="ml-1 font-semibold text-[#14162B]">{data.self?.name}</span>
                     </span>
                 </div>
             </Header>
 
             <FeedbackCreate
-                feedbackType={selectedFeedbackType as unknown as string}
+                feedbackType={selectedFeedbackType}
                 setFeedbackType={type => setSelectedFeedbackType(type as unknown as FeedbackType)}
                 selectedUser={selectedUser}
                 setSelectedUser={user => setSelectedUser(user)}
@@ -161,7 +167,7 @@ export default function SessionPage() {
                     <CardHeader>
                         <div className="flex items-center justify-between gap-4">
                             <CardTitle className="font-display text-xl font-bold tracking-tight text-[#14162B]">
-                                {translations?.runSession.participants} ({data.Users.length})
+                                {translations?.runSession.participants} ({data.users.length})
                             </CardTitle>
                             {feedback.length > 0 && (
                                 <span
@@ -196,11 +202,11 @@ export default function SessionPage() {
                             <Button
                                 className="mt-5 h-14 w-full cursor-pointer rounded-2xl bg-indigo-700 text-base font-semibold text-white hover:bg-indigo-800"
                                 onClick={handleSubmitAllFeedback}
-                                disabled={data.Self.HasSubmitted}
+                                disabled={data.self.has_submitted}
                             >
                                 {translations?.runSession.button.submitFeedback} ({feedback.length})
                             </Button>
-                            {data.Self.IsHost && (
+                            {data.self.is_host && (
                                 <Button
                                     variant="outline"
                                     className="mt-3 h-14 w-full cursor-pointer rounded-2xl border-2 border-[#14162B] bg-transparent text-base font-semibold text-[#14162B] hover:bg-[#14162B] hover:text-white"

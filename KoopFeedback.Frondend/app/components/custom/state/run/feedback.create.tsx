@@ -3,9 +3,9 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/c
 import {Meh, Smile} from "lucide-react";
 import {Textarea} from "~/components/ui/textarea";
 import {Button} from "~/components/ui/button";
-import type {User} from "../../../../../types/user";
+import type {UserDto} from "../../../../../types/userDto";
 import {useTranslation} from "~/context/translation";
-import {FeedbackType} from "../../../../../types/feedback/feedback";
+import {FeedbackType} from "../../../../../types/feedback/feedbackDto";
 
 const MIN_LENGTH = 10;
 
@@ -20,11 +20,11 @@ export function FeedbackCreate(
         handleAddFeedback
     }:
     {
-        selectedUser: User | null,
-        setSelectedUser: (user: User | null) => void,
+        selectedUser: UserDto | null,
+        setSelectedUser: (user: UserDto | null) => void,
         setFeedbackType: (type: string) => void,
         handleAddFeedback: () => void,
-        feedbackType: string,
+        feedbackType: FeedbackType | null,
         setDescription: (description: string) => void,
         description: string
     }
@@ -38,7 +38,7 @@ export function FeedbackCreate(
             className="rounded-[28px] border border-[#E2E6F2] bg-white p-8 shadow-[0_24px_48px_-16px_rgba(67,56,202,0.35)]">
             <DialogHeader>
                 <DialogTitle className="font-display text-2xl font-bold tracking-tight text-[#14162B]">
-                    Feedback {selectedUser?.Name}
+                    Feedback {selectedUser?.name}
                 </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">

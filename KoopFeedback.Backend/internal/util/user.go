@@ -34,7 +34,7 @@ func IsUseerHostByAuth(db *gorm.DB, authId string) (x bool) {
 	return true
 }
 
-func HasUserSameSession(db *gorm.DB, userId string, otherUserId uint) (x bool) {
+func HasUserSameSession(db *gorm.DB, userId uint, otherUserId uint) (x bool) {
 	user1, err1 := gorm.G[models.UserModel](db).Where("id = ?", userId).First(context.Background())
 	user2, err2 := gorm.G[models.UserModel](db).Where("id = ?", otherUserId).First(context.Background())
 

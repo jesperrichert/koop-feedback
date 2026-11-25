@@ -18,7 +18,7 @@ func (c *Controller) PostSessionFeedback(ctx *gin.Context) {
 	}
 	userId, _ := ctx.Get("userId")
 
-	success, status := c.SessionService.AddFeedback(userId.(int), body.Feedback)
+	success, status := c.SessionService.AddFeedback(userId.(uint), body.Feedback)
 
 	ctx.JSON(status, util.DefaultAPIResponse[dto.AddFeedbackResponse]{
 		Success: true,

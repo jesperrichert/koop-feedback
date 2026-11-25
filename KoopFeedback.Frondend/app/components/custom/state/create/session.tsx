@@ -9,7 +9,7 @@ import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {useTranslation} from "~/context/translation";
 import {API_ENDPOINT} from "~/lib/env";
-import type {DefaultAPIResponse, POSTCreateSessionResponseData} from "../../../../../types/api";
+import type {DefaultAPIResponse, CreateSessionResponse} from "../../../../../types/api";
 
 export function Session(
     {
@@ -41,14 +41,14 @@ export function Session(
                 }
             }).then(async (obj: {
                 res: Response,
-                dto: DefaultAPIResponse<POSTCreateSessionResponseData>
+                dto: DefaultAPIResponse<CreateSessionResponse>
             }) => {
-                if (obj.res.status != 200 || !obj.dto.Success)
+                if (obj.res.status != 200 || !obj.dto.success)
                     return toast.error(translations?.toasts.session.creationFailed);
 
                 cookieStore.set({
                     name: "authId",
-                    value: obj.dto.Data.authId
+                    value: obj.dto.data.authId
                 }).then(_ => {
                     toast.success(translations?.toasts.session.created);
                     setTimeout(() => {
