@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func IsSameUser(db *gorm.DB, authId string, userId int) (x bool) {
+func IsSameUser(db *gorm.DB, authId string, userId uint) (x bool) {
 	_, err := gorm.G[models.APIAccessModel](db).Where("user_id = ? AND token = ?", userId, authId).First(context.Background())
 
 	if err != nil {
@@ -17,7 +17,7 @@ func IsSameUser(db *gorm.DB, authId string, userId int) (x bool) {
 	return true
 }
 
-func IsUserHostByUserId(db *gorm.DB, userId int) (x bool) {
+func IsUserHostByUserId(db *gorm.DB, userId uint) (x bool) {
 	user, err := gorm.G[models.UserModel](db).Where("id = ?", userId).First(context.Background())
 
 	if err != nil || !user.IsHost {
@@ -34,7 +34,7 @@ func IsUseerHostByAuth(db *gorm.DB, authId string) (x bool) {
 	return true
 }
 
-func HasUserSameSession(db *gorm.DB, userId string, otherUserId int) (x bool) {
+func HasUserSameSession(db *gorm.DB, userId string, otherUserId uint) (x bool) {
 	user1, err1 := gorm.G[models.UserModel](db).Where("id = ?", userId).First(context.Background())
 	user2, err2 := gorm.G[models.UserModel](db).Where("id = ?", otherUserId).First(context.Background())
 

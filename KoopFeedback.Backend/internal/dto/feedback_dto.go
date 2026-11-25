@@ -5,16 +5,16 @@ import (
 )
 
 type FeedbackDto struct {
-	UserId      int
-	Type        feedback.FeedbackType
-	Description string
+	UserId      uint                  `json:"user_id"`
+	Type        feedback.FeedbackType `json:"type"`
+	Description string                `json:"description"`
 }
 
 type AddFeedbackRequest struct {
-	Feedback []FeedbackDto
+	Feedback []FeedbackDto `json:"feedback"`
 }
 
 type AddFeedbackResponse struct {
-	Success int
-	Failed  int
+	Success int `json:"success"`
+	Failed  int `json:"failed"`
 }

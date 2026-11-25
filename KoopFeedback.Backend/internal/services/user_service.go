@@ -46,7 +46,7 @@ func (s *UserService) GetFeedback(authId int) ([]models.FeedbackModel, int) {
 	return filteredFeedback, http.StatusOK
 }
 
-func (s *UserService) Delete(authId string, otherUserId int) int {
+func (s *UserService) Delete(authId string, otherUserId uint) int {
 	isSelf := util.IsSameUser(s.DB, authId, otherUserId)
 	isHost := util.IsUserHostByUserId(s.DB, otherUserId)
 	actingUser := util.GetUserFromAuthId(s.DB, authId)
@@ -60,13 +60,13 @@ func (s *UserService) Delete(authId string, otherUserId int) int {
 		return http.StatusNotFound
 	}
 
-	s.DB.Delete(&user.APIAuth)
+	s.DB.Delete(&user.APIAccess)
 	s.DB.Delete(&user)
 
 	return http.StatusOK
 }
 
-func (s *UserService) Get(userId int) (*models.UserModel, int) {
+func (s *UserService) Get(userId uint) (*models.UserModel, int) {
 	user, err := gorm.G[models.UserModel](s.DB).Preload("Session", nil).Where("id = ?", userId).First(context.Background())
 	if err != nil {
 		return nil, http.StatusNotFound

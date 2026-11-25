@@ -3,11 +3,11 @@ package models
 import "koopfeedback.de/internal/types/feedback"
 
 type FeedbackModel struct {
-	ID          uint `gorm:"primary_key"`
+	ID          uint `gorm:"primaryKey"`
 	Type        feedback.FeedbackType
 	Description string
-	UserID      int
-	User        UserModel `gorm:"foreignkey:UserID"`
+	UserID      uint
+	User        UserModel
 }
 
 func (FeedbackModel) TableName() string {

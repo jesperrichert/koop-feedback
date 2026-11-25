@@ -38,7 +38,7 @@ func (s *SessionService) Create(hostName string) (string, int) {
 	}
 
 	err := gorm.G[models.UserModel](s.DB).Create(context.Background(), &models.UserModel{
-		APIAuth: &models.APIAccessModel{
+		APIAccess: models.APIAccessModel{
 			Token: authId,
 		},
 		Name:         hostName,
@@ -86,14 +86,14 @@ func (s *SessionService) Join(code int, name string) (string, int) {
 		return "", http.StatusNotFound
 	}
 	err = gorm.G[models.UserModel](s.DB).Create(context.Background(), &models.UserModel{
-		APIAuth: &models.APIAccessModel{
+		APIAccess: models.APIAccessModel{
 			Token: authId,
 		},
 		Name:         name,
 		HasSubmitted: false,
 		IsHost:       false,
 		Feedback:     nil,
-		SessionID:    int(sessionModel.ID),
+		SessionID:    sessionModel.ID,
 	})
 	if err != nil {
 		return "", http.StatusInternalServerError
@@ -102,7 +102,7 @@ func (s *SessionService) Join(code int, name string) (string, int) {
 	return authId, http.StatusCreated
 }
 
-func (s *SessionService) Start(userId int) int {
+func (s *SessionService) Start(userId uint) int {
 	isHost := util.IsUserHostByUserId(s.DB, userId)
 	if !isHost {
 		return http.StatusForbidden
@@ -156,7 +156,7 @@ func (s *SessionService) AddFeedback(userId int, feedbackDto []dto.FeedbackDto) 
 		f := feedbackDto[i]
 
 		isSameSession := util.HasUserSameSession(s.DB, strconv.Itoa(userId), f.UserId)
-		isSelf := util.IsSameUser(s.DB, authUser.APIAuth.Token, f.UserId)
+		isSelf := util.IsSameUser(s.DB, authUser.APIAccess.Token, f.UserId)
 		if isSelf ||
 			!isSameSession {
 			continue

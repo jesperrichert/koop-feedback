@@ -3,11 +3,11 @@ package models
 import "koopfeedback.de/internal/dto"
 
 type SessionModel struct {
-	ID         uint `gorm:"primary_key"`
+	ID         uint `gorm:"primaryKey"`
 	Code       int
 	IsStarted  bool
 	IsFinished bool
-	Users      []UserModel
+	Users      []UserModel `gorm:"foreignKey:SessionID"`
 }
 
 func (SessionModel) TableName() string {

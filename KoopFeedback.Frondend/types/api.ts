@@ -2,9 +2,9 @@ import type {Session} from "./feedback/session";
 import type {User} from "./user";
 
 export type DefaultAPIResponse<T> = {
-    Success: boolean
-    Message: string
-    Data: T
+    success: boolean
+    code: string
+    data: T
 }
 
 export type POSTCreateSessionResponseData = {
@@ -12,12 +12,12 @@ export type POSTCreateSessionResponseData = {
 }
 
 export type POSTSessionFeedbackResponseData = {
-    Success: number
-    Failed: number
+    success: number
+    failed: number
 }
 
 export type GETSessionResponseData = {
-    Self: User
-    Session: Session
-    Users: User[]
+    self: User
+    session: Session
+    users: User[]
 }

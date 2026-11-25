@@ -11,7 +11,7 @@ import (
 func (c *Controller) Start(ctx *gin.Context) {
 	userId, _ := ctx.Get("userId")
 
-	status := c.SessionService.Start(userId.(int))
+	status := c.SessionService.Start(userId.(uint))
 	if status != http.StatusOK {
 		util.APIErrorResponse[any](ctx, "START_FAILED", status)
 		return

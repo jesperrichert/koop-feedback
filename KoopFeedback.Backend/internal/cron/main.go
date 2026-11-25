@@ -53,7 +53,7 @@ func (c *CronConfig) Setup() {
 						if len(dbUser.Feedback) > 0 {
 							c.DB.Delete(&dbUser.Feedback)
 						}
-						c.DB.Delete(&dbUser.APIAuth)
+						c.DB.Delete(&dbUser.APIAccess)
 						c.DB.Delete(&dbUser)
 					}
 

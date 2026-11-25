@@ -8,13 +8,13 @@ type SessionDto struct {
 }
 
 type AddSessionRequest struct {
-	HostName string
+	HostName string `json:"host_name"`
 }
 
 type GetSessionResponse struct {
-	Self    UserDto
-	Session SessionDto
-	Users   []UserDto
+	Self    UserDto    `json:"self"`
+	Session SessionDto `json:"session"`
+	Users   []UserDto  `json:"users"`
 }
 
 type JoinSessionRequest struct {

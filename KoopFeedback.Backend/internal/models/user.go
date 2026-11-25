@@ -7,14 +7,14 @@ import (
 )
 
 type UserModel struct {
-	ID           uint `gorm:"primary_key"`
+	ID           uint `gorm:"primaryKey"`
 	Name         string
 	HasSubmitted bool
 	IsHost       bool
-	Feedback     []FeedbackModel
-	APIAuth      *APIAccessModel
-	SessionID    int
-	Session      SessionModel `gorm:"foreignkey:SessionID"`
+	Feedback     []FeedbackModel `gorm:"foreignKey:UserID"`
+	APIAccess    APIAccessModel  `gorm:"foreignKey:UserID"`
+	SessionID    uint
+	Session      SessionModel `gorm:"foreignKey:SessionID"`
 }
 
 func (UserModel) TableName() string {

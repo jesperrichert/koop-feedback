@@ -10,5 +10,5 @@ type UserDto struct {
 }
 
 type GetUserRequest struct {
-	ID int `uri:"id" bindings:"required"`
+	ID uint `uri:"id" bindings:"required"`
 }

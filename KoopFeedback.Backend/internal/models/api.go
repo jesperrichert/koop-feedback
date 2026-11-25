@@ -1,10 +1,10 @@
 package models
 
 type APIAccessModel struct {
-	ID     uint `gorm:"primary_key"`
+	ID     uint `gorm:"primaryKey"`
 	Token  string
-	UserID int
-	User   *UserModel `gorm:"foreignkey:UserID"`
+	UserID uint
+	User   *UserModel `gorm:"foreignKey:UserID"`
 }
 
 func (APIAccessModel) TableName() string {
