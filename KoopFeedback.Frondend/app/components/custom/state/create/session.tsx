@@ -57,7 +57,7 @@ export function Session(
                     }, 500);
                 });
             }).catch(_ => toast(500, translations?.toasts.session.creationFailed))
-                .finally(() => setIsCreating(true));
+                .finally(() => setIsCreating(false));
         }
     ;
 
