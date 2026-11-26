@@ -22,7 +22,7 @@ func (c *AppConfig) Build() {
 	sessionService := services.NewSessionService(c.DB)
 
 	// CronJob
-	cron.NewCron(c.DB)
+	cron.NewCron(c.DB).Setup()
 
 	// Contoller
 	userController := user.NewController(c.DB, userService)
