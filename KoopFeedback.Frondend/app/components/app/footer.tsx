@@ -35,7 +35,7 @@ export default function Footer() {
                         {translations?.mainPage.footer.imprint}
                     </a>
                     <a
-                        href="https://github.com/jesperrichert/KoopFeedback"
+                        href="https://github.com/jesperrichert/koop-feedback"
                         className={`${linkClass} justify-center`}
                         target="_blank"
                         rel="noopener noreferrer"
