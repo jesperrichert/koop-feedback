@@ -106,13 +106,6 @@ export default function SessionPage() {
             toast(req.status,
                 `${feedback.length} ${translations?.toasts.feedback.itemsSubmitted}!`
             );
-            if (dto.data.success > 0) toast(200,
-                `${dto.data.success} SUCCESS`
-            );
-            if (dto.data.failed > 0) toast(500,
-                `${dto.data.failed} FAILED`
-            );
-
         } else toast(req.status, translations?.codes[dto.code] ?? "");
         setFeedback([]);
     };

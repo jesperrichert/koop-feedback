@@ -2,3 +2,5 @@ KoopFeedback.Backend/.env
 .env
 docker-compose.dev.yaml
 koop-feedback
+.idea/go.imports.xml
+.idea/compiler.xml
