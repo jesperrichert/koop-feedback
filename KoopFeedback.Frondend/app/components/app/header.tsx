@@ -3,7 +3,7 @@ import type {ReactNode} from "react";
 export default function Header({children}: { children?: ReactNode }) {
     return (
         <header className="mx-auto flex w-full max-w-6xl items-center px-8 py-7 gap-2">
-            <div className="flex items-center mr-10">
+            <div className="flex items-center gap-2 mr-10">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-700">
                     <img
                         src={"/icon.svg"}
