@@ -167,5 +167,26 @@
       "nameRequired": "Bitte gib deinen Namen ein",
       "descriptionRequired": "Bitte gib eine Beschreibung ein"
     }
+  },
+  "codes": {
+    "INVALID_BODY": "Die Anfrage konnte nicht verarbeitet werden.",
+    "TOO_SHORT_HOSTNAME": "Der Hostname muss länger als 2 zeichen sein!",
+    "CREATE_FAILED": "Die Erstellung von deiner Session isf fehlgeschlagen.",
+    "SESSION_CREATED": "Die Session wurde erstellt... Weiterleiten.",
+    "FAILED_FETCH_SESSION": "Es konnte keine Session angefragt werden...",
+    "END_FAILED": "Die Session konnte nicht beendet werden.",
+    "SESSION_ENDED": "Die Session wurde beendet.",
+    "FEEDBACK_ADD_FAILED": "Dein Feedback konnte nicht hinzugefugt werden.",
+    "FEEDBACK_ADDED": "Dein Feedback wurde gespeichert.",
+    "JOIN_FAILED": "Du konntest der Session nicht beitreten!",
+    "SESSION_JOINED": "Du bist der Session beigetreten.",
+    "START_FAILED": "Die Session konnte nicht gestartet werden.",
+    "SESSION_STARTED": "Die Session wurde gestartet...",
+    "GET_FEEDBACK_ERROR": "Dein Feedback konnte nicht gefunden werden.",
+    "USER_NOT_FOUND": "Es konnten keine Nutzer-Daten gefunden werden!",
+    "FORBIDDEN": "Diese Daten konnen nicht angesehen werden!",
+    "USER_DELETED": "Nutzer-Daten wurden gelöscht.",
+    "LOGOUT_FAILED": "Wir konnten keinen logout bereitstellen!",
+    "LOGOUT": "Du wurdest ausgeloggt."
   }
 }

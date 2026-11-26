@@ -74,13 +74,15 @@ func (s *UserService) Get(userId uint) (*models.UserModel, int) {
 	return &user, http.StatusOK
 }
 
-func (s *UserService) Logout(userId int) int {
-	user, err := gorm.G[models.UserModel](s.DB).Preload("Feedback", nil).Where("id = ?", userId).First(context.Background())
+func (s *UserService) Logout(userId uint) int {
+	user, err := gorm.G[models.UserModel](s.DB).Preload("Feedback", nil).Preload("APIAccess", nil).Where("id = ?", userId).First(context.Background())
 	if err != nil {
 		return http.StatusInternalServerError
 	}
 
-	s.DB.Delete(&user.Feedback)
+	_ = s.DB.Delete(&user.APIAccess)
+	_ = s.DB.Delete(&user.Feedback)
+	_ = s.DB.Delete(&user)
 
 	return http.StatusOK
 }

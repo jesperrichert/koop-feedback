@@ -52,6 +52,6 @@ func (c *Controller) Delete(ctx *gin.Context) {
 
 	ctx.JSON(200, util.DefaultAPIResponse[any]{
 		Success: true,
-		Code:    "DELETED",
+		Code:    "USER_DELETED",
 	})
 }

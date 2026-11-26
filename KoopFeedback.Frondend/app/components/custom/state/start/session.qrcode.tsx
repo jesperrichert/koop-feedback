@@ -1,8 +1,9 @@
-import {toast} from "react-toastify";
+
 import {Copy} from "lucide-react";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {useTranslation} from "~/context/translation";
 import QRCode from "react-qr-code";
+import { toast } from "~/lib/api";
 
 export default function SessionQrcode({code}: { code: number }) {
     const {translations} = useTranslation()
@@ -20,7 +21,7 @@ export default function SessionQrcode({code}: { code: number }) {
                         aria-label="Copy link"
                         onClick={async () => {
                             await navigator.clipboard.writeText(link);
-                            toast.info(translations?.toasts.session.codeCopied)
+                            toast(200, translations?.toasts.session.codeCopied)
                         }}
                         className="-mr-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-[#5B6078] transition-colors hover:bg-[#F4F6FB] hover:text-[#14162B]"
                     >

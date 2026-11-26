@@ -30,7 +30,7 @@ func (c *Controller) Create(ctx *gin.Context) {
 
 	ctx.JSON(200, util.DefaultAPIResponse[any]{
 		Success: true,
-		Code:    "SESSION",
+		Code:    "SESSION_CREATED",
 		Data: gin.H{
 			"authId": authId,
 		},
@@ -61,7 +61,7 @@ func (c *Controller) Get(ctx *gin.Context) {
 
 	ctx.JSON(200, util.DefaultAPIResponse[dto.GetSessionResponse]{
 		Success: true,
-		Code:    "SESSION",
+		Code:    "SESSION_FETCHED",
 		Data: dto.GetSessionResponse{
 			Self:    user,
 			Session: session.ToDto(),

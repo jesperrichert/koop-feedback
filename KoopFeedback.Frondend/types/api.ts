@@ -26,3 +26,7 @@ export type GetSessionResponse = {
 export  type AddFeedbackRequest = {
     feedback: FeedbackDto[]
 }
+
+export type CreateSessionRequest = {
+     host_name: string
+ }

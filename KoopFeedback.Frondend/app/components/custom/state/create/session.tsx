@@ -2,14 +2,15 @@
 
 import {LoaderCircle, Plus, XCircle} from "lucide-react";
 import {useState} from "react";
-import {toast} from "react-toastify";
+
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {Label} from "~/components/ui/label";
 import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {useTranslation} from "~/context/translation";
 import {API_ENDPOINT} from "~/lib/env";
-import type {DefaultAPIResponse, CreateSessionResponse} from "../../../../../types/api";
+import type {DefaultAPIResponse, CreateSessionResponse, CreateSessionRequest} from "../../../../../types/api";
+import { toast } from "~/lib/api";
 
 export function Session(
     {
@@ -32,8 +33,8 @@ export function Session(
             await fetch(`${API_ENDPOINT}/api/v2/session`, {
                 method: "POST",
                 body: JSON.stringify({
-                    HostName: name!.trim()
-                })
+                    host_name: name!.trim()
+                } satisfies CreateSessionRequest)
             }).then(async (res) => {
                 return {
                     res: res,
@@ -43,19 +44,19 @@ export function Session(
                 res: Response,
                 dto: DefaultAPIResponse<CreateSessionResponse>
             }) => {
-                if (obj.res.status != 200 || !obj.dto.success)
-                    return toast.error(translations?.toasts.session.creationFailed);
-
+                toast(obj.res.status, translations?.codes[obj.dto.code]);
+                if (obj.res.status != 200) return
+                
                 cookieStore.set({
                     name: "authId",
                     value: obj.dto.data.authId
                 }).then(_ => {
-                    toast.success(translations?.toasts.session.created);
+                    toast(200, translations?.toasts.session.created);
                     setTimeout(() => {
                         window.location.assign("/state/start");
                     }, 500);
                 });
-            }).catch(_ => toast.error(translations?.toasts.session.creationFailed))
+            }).catch(_ => toast(500, translations?.toasts.session.creationFailed))
                 .finally(() => setIsCreating(true));
         }
     ;

@@ -1,6 +1,6 @@
 import React, {createContext, type ReactNode, useContext, useEffect, useState} from "react";
 import {getLanguageFile, getLanguageKey} from "~/lib/language";
-import type {Translations} from "../../types/translations";
+import type {Translations} from "../../types/translations/translations";
 
 export type TranslationContextType = {
     translations?: Translations;

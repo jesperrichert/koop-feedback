@@ -19,6 +19,6 @@ func (c *Controller) Start(ctx *gin.Context) {
 
 	ctx.JSON(200, util.DefaultAPIResponse[any]{
 		Success: true,
-		Code:    "STARTED",
+		Code:    "SESSION_STARTED",
 	})
 }

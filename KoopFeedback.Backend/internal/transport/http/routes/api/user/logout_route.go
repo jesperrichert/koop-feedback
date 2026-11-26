@@ -10,9 +10,10 @@ import (
 
 func (c *Controller) Logout(ctx *gin.Context) {
 	userId, _ := ctx.Get("userId")
-	status := c.UserService.Logout(userId.(int))
+	status := c.UserService.Logout(userId.(uint))
+
 	if status == http.StatusInternalServerError {
-		util.APIErrorResponse[any](ctx, "Failed to logout...", http.StatusInternalServerError)
+		util.APIErrorResponse[any](ctx, "LOGOUT_FAILED", http.StatusInternalServerError)
 		return
 	}
 

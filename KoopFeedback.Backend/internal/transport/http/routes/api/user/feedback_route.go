@@ -13,7 +13,7 @@ func (c *Controller) GetUserFeedback(ctx *gin.Context) {
 	authId, _ := ctx.Get("authId")
 	feedback, status := c.UserService.GetFeedback(authId.(string))
 	if status != http.StatusOK {
-		util.APIErrorResponse[dto.FeedbackDto](ctx, "ERROR", status)
+		util.APIErrorResponse[dto.FeedbackDto](ctx, "GET_FEEDBACK_ERROR", status)
 		return
 	}
 

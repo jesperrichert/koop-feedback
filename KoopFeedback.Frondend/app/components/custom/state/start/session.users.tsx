@@ -2,11 +2,12 @@ import {Card, CardContent, CardHeader, CardTitle} from "~/components/ui/card";
 import {Button} from "~/components/ui/button";
 import type {UserDto} from "../../../../../types/userDto";
 import {Crown, Trash} from "lucide-react";
-import {toast} from "react-toastify";
+
 import type {GetSessionResponse} from "../../../../../types/api";
 import {useTranslation} from "~/context/translation";
 import {API_ENDPOINT} from "~/lib/env";
 import {AVATAR_COLORS} from "~/lib/constants";
+import { toast } from "~/lib/api";
 
 export default function SessionUsers(
     {
@@ -41,11 +42,7 @@ export default function SessionUsers(
                 return res.json();
             })
             .catch((error) => {
-                toast(error.message, {
-                    type: "error",
-                    position: "top-right",
-                    autoClose: 5000,
-                });
+                toast(500, error.message)
             });
     }
 

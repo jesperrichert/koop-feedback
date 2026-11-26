@@ -1,23 +1,24 @@
 "use client";
 
-import {Copy} from "lucide-react";
-import {useEffect, useState} from "react";
-import {toast} from "react-toastify";
-import {useTranslation} from "~/context/translation";
-import type {DefaultAPIResponse, GetSessionResponse} from "../../../../types/api";
+import { Copy } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { useTranslation } from "~/context/translation";
+import type { DefaultAPIResponse, GetSessionResponse } from "../../../../types/api";
 import Loading from "~/components/app/loading";
 import SessionUsers from "~/components/custom/state/start/session.users";
 import SessionQrcode from "~/components/custom/state/start/session.qrcode";
 import Header from "~/components/app/header";
-import {auth} from "~/lib/auth";
-import {API_ENDPOINT} from "~/lib/env";
-import {NotFound} from "~/components/custom/not-found";
+import { auth } from "~/lib/auth";
+import { API_ENDPOINT } from "~/lib/env";
+import { NotFound } from "~/components/custom/not-found";
+import { toast } from "~/lib/api";
 
 export default function SessionPage() {
     const [data, setData] = useState<GetSessionResponse | null>(null);
     const [authId, setAuthId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const {translations} = useTranslation()
+    const { translations } = useTranslation()
 
     useEffect(() => {
         const load = async () => {
@@ -32,7 +33,7 @@ export default function SessionPage() {
             }).then(value => value.json())
                 .then((value: DefaultAPIResponse<GetSessionResponse>) => setData(value.data))
                 .catch(() => {
-                    toast.error(translations?.toasts.session.loadFailed)
+                    toast(500, translations?.toasts.session.loadFailed)
                 });
 
             if (data?.session.is_started) return window.open("/state/run", "_self")
@@ -46,7 +47,7 @@ export default function SessionPage() {
     const copySessionCode = async () => {
         if (!data) return;
         await navigator.clipboard.writeText(data.session.code.toString());
-        toast.success(translations?.toasts.session.codeCopied);
+        toast(200, translations?.toasts.session.codeCopied);
     };
 
     const startSession = async () => {
@@ -56,16 +57,15 @@ export default function SessionPage() {
                 "Authorization": authId as string,
                 "Content-Type": "application/json",
             },
-        }).then(value => {
-            value.status != 200 ?
-                value.json().then((json) => toast.error(json.Message)) :
-                toast.success(translations?.toasts.session.started);
+        }).then(async (response) => {
+            const json = await response.json();
+            toast(response.status, translations?.codes[json.code] ?? "");
         })
     }
 
 
-    if (isLoading) return <Loading/>
-    if (!data) return <NotFound/>
+    if (isLoading) return <Loading />
+    if (!data) return <NotFound />
 
     return (
         <div className="min-h-screen bg-[#F4F6FB] text-[#14162B]">
@@ -81,7 +81,7 @@ export default function SessionPage() {
                             {data.session.code}
                         </span>
                     </span>
-                    <Copy className="h-4 w-4" aria-hidden="true"/>
+                    <Copy className="h-4 w-4" aria-hidden="true" />
                 </button>
             </Header>
 

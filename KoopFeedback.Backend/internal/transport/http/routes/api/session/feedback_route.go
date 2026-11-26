@@ -22,7 +22,7 @@ func (c *Controller) PostSessionFeedback(ctx *gin.Context) {
 
 	ctx.JSON(status, util.DefaultAPIResponse[dto.AddFeedbackResponse]{
 		Success: true,
-		Code:    "FEEDBACK",
+		Code:    "FEEDBACK_ADDED",
 		Data: dto.AddFeedbackResponse{
 			Success: success,
 			Failed:  int(math.Abs(float64(len(body.Feedback) - success))),

@@ -1,4 +1,4 @@
-import type {StickyTone} from "./feedback/sticky-note";
+import type { StickyTone } from "types/feedback/sticky-note";
 
 export type MainPageButton = {
     createSession: string;
@@ -156,7 +156,6 @@ export type FeedbackToasts = {
     loadFailed: string;
 };
 
-
 export type ValidationToasts = {
     nameRequired: string;
     descriptionRequired: string;
@@ -168,11 +167,12 @@ export type Toasts = {
     validation: ValidationToasts;
 };
 
-export interface Translations {
+export type Translations = {
     mainPage: MainPage;
     session: Session;
     createSession: CreateSession;
     runSession: RunSession;
     endSession: EndSession;
     toasts: Toasts;
+    codes: Record<string, string>;
 }

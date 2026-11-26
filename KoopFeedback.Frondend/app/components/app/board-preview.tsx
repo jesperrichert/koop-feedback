@@ -1,6 +1,6 @@
 import {StickyNote} from "~/components/custom/stick-note";
 import {useTranslation} from "~/context/translation";
-import type {Column} from "../../../types/translations";
+import type {Column} from "../../../types/translations/translations";
 
 
 export function BoardPreview() {

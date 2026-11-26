@@ -1,22 +1,23 @@
 "use client";
 
-import {ArrowRight} from "lucide-react";
-import {useEffect, useState} from "react";
-import {toast} from "react-toastify";
-import {Label} from "~/components/ui/label";
-import {Input} from "~/components/ui/input";
-import {Button} from "~/components/ui/button";
-import {useTranslation} from "~/context/translation";
+import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
+import { useTranslation } from "~/context/translation";
 import CodeInput from "~/components/custom/state/create/code";
-import {API_ENDPOINT} from "~/lib/env";
-import type {CreateSessionResponse, DefaultAPIResponse} from "../../../../../types/api";
+import { API_ENDPOINT } from "~/lib/env";
+import type { CreateSessionResponse, DefaultAPIResponse } from "../../../../../types/api";
+import { toast } from "~/lib/api";
 
 export default function Join() {
     const [code, setCode] = useState<number>();
     const [showUserNameInput, setShowUserNameInput] = useState<boolean>(false);
     const [userName, setUserName] = useState<string>();
     const [isJoining, setIsJoining] = useState<boolean>(false);
-    const {translations} = useTranslation();
+    const { translations } = useTranslation();
 
     useEffect(() => {
         const codeParam = new URLSearchParams(window.location.search).get("code");
@@ -31,9 +32,9 @@ export default function Join() {
 
     const handleJoin = async () => {
         if (userName && !userName.trim())
-            return toast.error(translations?.toasts.validation.nameRequired);
+            return toast(500, translations?.toasts.validation.nameRequired);
         if (code == null || !Number.isSafeInteger(code))
-            return toast.error(translations?.toasts.session.invalidCode);
+            return toast(500, translations?.toasts.session.invalidCode);
         if (isJoining) return;
         setIsJoining(true);
 
@@ -55,23 +56,23 @@ export default function Join() {
             dto: DefaultAPIResponse<CreateSessionResponse>
             res: Response
         }) => {
-            if (!obj.res.ok || !obj.dto.success)
-                return toast.error(translations?.toasts.session.joinFailed)
+            toast(obj.res.status, translations?.codes[obj.dto.code] ?? "")
+            if (obj.res.status != 200) return
 
             cookieStore.set({
                 name: "authId",
                 value: obj.dto.data.authId
             }).then(() => {
-                toast.success(translations?.toasts.session.joined);
+                toast(200, translations?.toasts.session.joined);
                 window.location.assign("/state/start");
             })
-        }).catch(() => toast.error(translations?.toasts.session.joinFailed))
+        }).catch(() => toast(500, translations?.toasts.session.joinFailed))
             .finally(() => setIsJoining(false))
     }
 
     const handleOpenJoin = () => {
         if (code == null || !Number.isSafeInteger(code))
-            return toast.error(translations?.toasts.session.invalidCode);
+            return toast(500, translations?.toasts.session.invalidCode);
         setShowUserNameInput(true);
     };
 
@@ -117,7 +118,7 @@ export default function Join() {
                 className="h-14 w-full cursor-pointer rounded-2xl border-2 border-[#14162B] bg-transparent text-base font-semibold text-[#14162B] hover:bg-[#14162B] hover:text-white"
             >
                 {translations?.mainPage.code.join}
-                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true"/>
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
             </Button>
 
             {showUserNameInput && (

@@ -1,61 +1,57 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {LogOut} from "lucide-react";
-import {useTranslation} from "~/context/translation";
-import {type FeedbackDto, FeedbackType} from "../../../../types/feedback/feedbackDto";
+import { useEffect, useState } from "react";
+import { LogOut } from "lucide-react";
+import { useTranslation } from "~/context/translation";
+import { type FeedbackDto, FeedbackType } from "../../../../types/feedback/feedbackDto";
 import Loading from "~/components/app/loading";
-import type {DefaultAPIResponse} from "../../../../types/api";
-import {Button} from "~/components/ui/button";
-import {StickyNote} from "~/components/custom/stick-note";
+import type { DefaultAPIResponse } from "../../../../types/api";
+import { Button } from "~/components/ui/button";
+import { StickyNote } from "~/components/custom/stick-note";
 import Header from "~/components/app/header";
-import type {StickyTone} from "../../../../types/feedback/sticky-note";
-import {TILTS} from "~/lib/constants";
-import {API_ENDPOINT} from "~/lib/env";
+import type { StickyTone } from "../../../../types/feedback/sticky-note";
+import { TILTS } from "~/lib/constants";
+import { API_ENDPOINT } from "~/lib/env";
 
 
 export default function EndPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [feedbacks, setFeedbacks] = useState<FeedbackDto[] | null>([]);
-    const {translations} = useTranslation()
+    const { translations } = useTranslation()
 
     useEffect(() => {
         const load = async () => {
-                const authIdCookie = await cookieStore.get("authId")
-                if (!authIdCookie)
-                    return window.location.href = "/";
+            const authIdCookie = await cookieStore.get("authId")
+            if (!authIdCookie)
+                return window.location.href = "/";
 
-                await fetch(`${API_ENDPOINT}/api/v2/user/feedback`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": authIdCookie.value as string,
-                        "Content-Type": "application/json",
-                    },
-                }).then(async (response) => {
-                    return {
-                        dto: await response.json(),
-                        res: response
-                    }
-                }).then((obj: {
-                    dto: DefaultAPIResponse<FeedbackDto[]>,
-                    res: Response,
-                }) => {
-                    if (!obj.res.ok || !obj.dto.success) {
-                        setFeedbacks(null)
-                        setIsLoading(false)
-                        return
-                    }
-                    if (obj.res.status  == 423) return window.open("/state/run", "_self")
+            await fetch(`${API_ENDPOINT}/api/v2/user/feedback`, {
+                method: "GET",
+                headers: {
+                    "Authorization": authIdCookie.value as string,
+                    "Content-Type": "application/json",
+                },
+            }).then(async (response) => {
+                return {
+                    dto: await response.json(),
+                    res: response
+                }
+            }).then((obj: {
+                dto: DefaultAPIResponse<FeedbackDto[]>,
+                res: Response,
+            }) => {
+                if (obj.res.status != 200 || !obj.dto.success)
+                    setFeedbacks(null)
+                else setFeedbacks(obj.dto.data)
+                if (obj.dto.code == "UNAUTHORIZED") return window.open("/", "_self")
+            }).catch(_ => setFeedbacks(null))
+                .finally(() => setIsLoading(false))
+        }
 
-                    setFeedbacks(obj.dto.data);
-                }).catch(_ => setFeedbacks(null))
-                    .finally(() => setIsLoading(false))
-            }
-        ;
         load();
     }, [])
 
-    if (isLoading) return <Loading/>
+    if (isLoading) return <Loading />
 
     const logoutSession = async () => {
         const authIdCookie = await cookieStore.get("authId")
@@ -65,7 +61,11 @@ export default function EndPage() {
                 "Authorization": authIdCookie?.value as string,
                 "Content-Type": "application/json",
             },
-        }).then(_ => window.open("/", "_self"))
+        }).then(async _ => {
+            await cookieStore.delete("authId")
+            await cookieStore.delete("userId")
+            window.open("/", "_self")
+        })
     }
 
     const all = feedbacks ?? [];
@@ -95,7 +95,7 @@ export default function EndPage() {
                     className="h-11 cursor-pointer rounded-full border-2 border-[#14162B] bg-transparent px-5 font-semibold text-[#14162B] hover:bg-[#14162B] hover:text-white"
                     onClick={() => logoutSession()}
                 >
-                    <LogOut className="mr-2 h-4 w-4" aria-hidden="true"/>
+                    <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
                     {translations?.endSession.button.logout}
                 </Button>
             </Header>

@@ -25,7 +25,7 @@ func (c *Controller) JoinSession(ctx *gin.Context) {
 
 	ctx.JSON(200, util.DefaultAPIResponse[any]{
 		Success: true,
-		Code:    "JOINED",
+		Code:    "SESSION_JOINED",
 		Data: gin.H{
 			"authId": authId,
 		},

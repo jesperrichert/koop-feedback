@@ -13,13 +13,6 @@ export default function Loading() {
                 aria-busy="true"
             >
                 <section className="flex min-w-0 flex-[1_1_520px] flex-col gap-7" aria-hidden="true">
-                    <div className="relative h-32 w-32 sm:h-44 sm:w-44">
-                        <div
-                            className="absolute inset-0 rounded-full border-[10px] border-indigo-100 sm:border-[14px]"/>
-                        <div
-                            className="absolute inset-0 animate-spin rounded-full border-[10px] border-transparent border-t-indigo-700 border-r-indigo-400 sm:border-[14px]"/>
-                    </div>
-
                     <div className="flex flex-col gap-3">
                         <span className="h-12 w-4/5 animate-pulse rounded-xl bg-[#E2E6F2] sm:h-14"/>
                         <span className="h-12 w-3/5 animate-pulse rounded-xl bg-[#E2E6F2] sm:h-14"/>

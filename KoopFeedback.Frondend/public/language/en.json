@@ -167,5 +167,26 @@
       "nameRequired": "Please enter your name",
       "descriptionRequired": "Please enter a description"
     }
+  },
+  "codes": {
+    "INVALID_BODY": "The request could not be processed.",
+    "TOO_SHORT_HOSTNAME": "The hostname must be longer than 2 characters!",
+    "CREATE_FAILED": "An error occurred while creating your isf session.",
+    "SESSION_CREATED": "The session was created... Forward.",
+    "FAILED_FETCH_SESSION": "Es konnte keine Session angefragt werden...",
+    "END_FAILED": "The session could not be closed.",
+    "SESSION_ENDED": "The session has ended.",
+    "FEEDBACK_ADD_FAILED": "Your feedback could not be added.",
+    "FEEDBACK_ADDED": "Your feedback has been saved.",
+    "JOIN_FAILED": "You were unable to join the session!",
+    "SESSION_JOINED": "You have joined the session.",
+    "START_FAILED": "The session could not be started.",
+    "SESSION_STARTED": "The session has started...",
+    "GET_FEEDBACK_ERROR": "Your feedback could not be found.",
+    "USER_NOT_FOUND": "No user data was found!",
+    "FORBIDDEN": "This data cannot be viewed!",
+    "USER_DELETED": "User data has been deleted.",
+    "LOGOUT_FAILED": "We were unable to provide a logout option!",
+    "LOGOUT": "You have been logged out."
   }
 }

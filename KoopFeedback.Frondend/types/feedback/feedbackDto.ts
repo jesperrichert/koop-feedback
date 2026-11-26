@@ -6,5 +6,6 @@ export type FeedbackDto = {
 
 export enum FeedbackType {
     Normal = 0,
-    Positive = 1
+    Positive = 1,
+    Unknown = 2
 }

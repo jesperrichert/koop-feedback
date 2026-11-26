@@ -1,26 +1,27 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {toast} from "react-toastify";
-import {useTranslation} from "~/context/translation";
-import {Card, CardContent, CardHeader, CardTitle} from "~/components/ui/card";
-import {Button} from "~/components/ui/button";
+import { useEffect, useState } from "react";
+
+import { useTranslation } from "~/context/translation";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 import type {
     AddFeedbackRequest,
     DefaultAPIResponse,
     GetSessionFeedbackResponse,
     GetSessionResponse
 } from "../../../../types/api";
-import type {UserDto} from "../../../../types/userDto";
-import {type FeedbackDto, FeedbackType} from "../../../../types/feedback/feedbackDto";
-import {NotFound} from "~/components/custom/not-found";
+import type { UserDto } from "../../../../types/userDto";
+import { type FeedbackDto, FeedbackType } from "../../../../types/feedback/feedbackDto";
+import { NotFound } from "~/components/custom/not-found";
 import Loading from "~/components/app/loading";
 import FeedbackSent from "~/components/custom/state/run/feedback.sent";
-import {FeedbackCreate} from "~/components/custom/state/run/feedback.create";
+import { FeedbackCreate } from "~/components/custom/state/run/feedback.create";
 import UserSelectFeedback from "~/components/custom/state/run/feedback.users";
 import FeedbackView from "~/components/custom/state/run/feedback.display";
 import Header from "~/components/app/header";
-import {API_ENDPOINT} from "~/lib/env";
+import { API_ENDPOINT } from "~/lib/env";
+import { toast } from "~/lib/api";
 
 export default function SessionPage() {
     const [data, setData] = useState<GetSessionResponse | null>(null);
@@ -30,7 +31,7 @@ export default function SessionPage() {
     const [feedback, setFeedback] = useState<FeedbackDto[]>([]);
     const [selectedFeedbackType, setSelectedFeedbackType] = useState<FeedbackType | null>();
     const [feedbackDescription, setFeedbackDescription] = useState<string>("");
-    const {translations} = useTranslation()
+    const { translations } = useTranslation()
 
     useEffect(() => {
         const session = async () => {
@@ -56,7 +57,7 @@ export default function SessionPage() {
                 if (obj.dto?.data.session.is_finished) return window.open("/state/end", "_self")
                 setData(obj.dto.data)
             }).catch(_ => {
-                toast.error(translations?.toasts.session.loadFailed);
+                toast(500, translations?.toasts.session.loadFailed);
             }).finally(() => setIsLoading(false))
         }
         const interval = setInterval(session, 1000);
@@ -66,7 +67,7 @@ export default function SessionPage() {
     const handleAddFeedback = async () => {
         if (!selectedUser) return;
         if (feedbackDescription.length <= 0)
-            return toast.error(translations?.toasts.validation.descriptionRequired);
+            return toast(500, translations?.toasts.validation.descriptionRequired);
 
         const created = {
             type: parseInt(String(selectedFeedbackType)),
@@ -78,17 +79,17 @@ export default function SessionPage() {
         setSelectedUser(null);
         setSelectedFeedbackType(null);
         setFeedbackDescription("");
-        toast.success(translations?.toasts.feedback.added);
+        toast(200, translations?.toasts.feedback.added);
     }
 
     const handleRemoveFeedback = (feedback: FeedbackDto) => {
         setFeedback((prev) => prev.filter((f) => feedback !== f));
-        toast.info(translations?.toasts.feedback.removed);
+        toast(400, translations?.toasts.feedback.removed);
     };
 
     const handleSubmitAllFeedback = async () => {
         if (feedback.length === 0)
-            return toast.warning(translations?.toasts.feedback.noFeedbackSubmitted);
+            return toast(400, translations?.toasts.feedback.noFeedbackSubmitted);
 
         const req = await fetch(`${API_ENDPOINT}/api/v2/session/feedback`, {
             method: "POST",
@@ -97,22 +98,22 @@ export default function SessionPage() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                feedback: feedback.map(f => ({...f, user_id: Number(f.user_id)}))
+                feedback: feedback.map(f => ({ ...f, user_id: Number(f.user_id) }))
             } satisfies AddFeedbackRequest),
         });
         const dto = await req.json() as DefaultAPIResponse<GetSessionFeedbackResponse>
         if (dto.success) {
-            toast.info(
+            toast(req.status,
                 `${feedback.length} ${translations?.toasts.feedback.itemsSubmitted}!`
             );
-            if (dto.data.success > 0) toast.success(
+            if (dto.data.success > 0) toast(200,
                 `${dto.data.success} SUCCESS`
             );
-            if (dto.data.failed > 0) toast.error(
+            if (dto.data.failed > 0) toast(500,
                 `${dto.data.failed} FAILED`
             );
 
-        } else toast.error(dto.code);
+        } else toast(req.status, translations?.codes[dto.code] ?? "");
         setFeedback([]);
     };
 
@@ -124,15 +125,13 @@ export default function SessionPage() {
                 "Content-Type": "application/json",
             },
         });
-
-        req.status == 200 ?
-            toast.success(translations?.toasts.session.ended) :
-            toast.error(translations?.toasts.session.endFailed);
+        const json = await req.json()
+        toast(req.status, translations?.codes[json.code] ?? "")
     }
 
     if (isLoading) return <Loading></Loading>
-    if (!data) return <NotFound/>
-    if (data?.self.has_submitted && !data.self.is_host) return <FeedbackSent/>
+    if (!data) return <NotFound />
+    if (data?.self.has_submitted && !data.self.is_host) return <FeedbackSent />
 
     return (
         <div className="min-h-screen bg-[#F4F6FB] text-[#14162B]">
@@ -140,7 +139,7 @@ export default function SessionPage() {
                 <div className="flex flex-wrap items-center justify-end gap-2 text-sm text-[#4A4F68]">
                     <span
                         className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#E2E6F2] bg-white px-4">
-                        <span className="h-2 w-2 rounded-full bg-emerald-600" aria-hidden="true"/>
+                        <span className="h-2 w-2 rounded-full bg-emerald-600" aria-hidden="true" />
                         {translations?.runSession.header.sessionCode}: Started
                     </span>
                     <span
@@ -172,7 +171,7 @@ export default function SessionPage() {
                             {feedback.length > 0 && (
                                 <span
                                     className="rounded-full bg-indigo-50 px-3 py-1 text-sm font-semibold text-indigo-800">
-                                  {feedback.length} {translations?.runSession.feedbackReady}
+                                    {feedback.length} {translations?.runSession.feedbackReady}
                                 </span>
                             )}
                         </div>
